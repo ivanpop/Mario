@@ -40,11 +40,11 @@ public class Play extends BasicGameState{
 	
 	private SpriteSheet ryuStaticSheet, ryuRightSheet, ryuLeftSheet, ryuPunchSheet, ryuLowKickSheet, 
 							ryuHadoukenSheet, ryuHadoukenBallSheet, ryuShoryukenSheet, ryuTatsakuSheet,
-							fireSheet, ryuHurtSheet;
+							fireSheet, ryuHurtSheet, thug1WalkSheet;
 	
 	private Animation ryuSprite, ryuStaticAnimation, ryuRightAnimation, ryuLeftAnimation, ryuPunchAnimation, 
 							ryuLowKickAnimation, ryuHadoukenAnimation, ryuHadoukenBallAnimation, ryuShoryukenAnimation,
-							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation;
+							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation, thug1WalkAnimation;
 	
 	public Play(int state){		
 	}
@@ -90,7 +90,11 @@ public class Play extends BasicGameState{
 		
 		//other animations
 		fireSheet = new SpriteSheet("res/other/fire.png", 55, 80);
-		fireAnimation = new Animation(fireSheet, 300);		
+		fireAnimation = new Animation(fireSheet, 300);
+		
+		//enemy animations
+		thug1WalkSheet = new SpriteSheet("res/enemies/thug1Walk.png", 45, 79);
+		thug1WalkAnimation = new Animation(thug1WalkSheet, 300);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -149,6 +153,9 @@ public class Play extends BasicGameState{
 			g.drawString("Quit Game (Q)", 550, 400);
 			if(quit == false) g.clear();
 		}
+		
+		//enemi animations
+		thug1WalkAnimation.draw(ryuPositionX + 1100, ryuPositionY + 300);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
@@ -202,68 +209,29 @@ public class Play extends BasicGameState{
 			if(enableInput) ryuSprite = ryuLeftAnimation;
 		} 
 		
-		else ryuSprite = ryuStaticAnimation;
-		
+		else ryuSprite = ryuStaticAnimation;		
 		
 		//ryu up movement
-		if(input.isKeyDown(Input.KEY_UP)){
-			if(ryuPunch == false) {
-				if(ryuLowKick == false){
-					if(ryuHadouken == false){
-						if(ryuShoryuken == false){
-							if(ryuTatsaku == false){
-								if(enableInput)	ryuPositionY += delta * .1f + 1;								
-							}
-						}
-					}
-				}
-			} 			
+		if(input.isKeyDown(Input.KEY_UP)){			
+			if (movement())	ryuPositionY += delta * .1f + 1;
 			if(ryuPositionY > -60) ryuPositionY -= delta * .1f + 1;
 		}
 		
 		//ryu down movement
 		if(input.isKeyDown(Input.KEY_DOWN)){
-			if(ryuPunch == false) {
-				if(ryuLowKick == false){
-					if(ryuHadouken == false){
-						if(ryuShoryuken == false){
-							if(ryuTatsaku == false){								
-								if(enableInput) ryuPositionY -= delta * .1f + 1;								
-							}
-						}
-					}
-				}
-			}
+			if (movement()) ryuPositionY -= delta * .1f + 1;
 			if(ryuPositionY < -397)	ryuPositionY += delta * .1f + 1;			
 		}
 	
 		//ryu left movement
 		if(input.isKeyDown(Input.KEY_LEFT)){
-			if(ryuPunch == false) {
-				if(ryuLowKick == false){
-					if(ryuHadouken == false){
-						if(ryuShoryuken == false){															
-							if(enableInput) ryuPositionX += delta * .1f + 1.5;
-						}
-					}
-				}
-			}
+			if (movement()) ryuPositionX += delta * .1f + 1.5;							
 			if(ryuPositionX > 0) ryuPositionX -= delta * .1f + 1.5;			
 		}
 		
 		//ryu right movement
 		if(input.isKeyDown(Input.KEY_RIGHT)){
-			if(ryuPunch == false) {
-				if(ryuLowKick == false){
-					if(ryuHadouken == false){
-						if(ryuShoryuken == false){
-							if(ryuTatsaku == false){								
-								if(enableInput) ryuPositionX -= delta * .1f + 1.5;
-							}
-						}
-					}
-				}
-			}
+			if (movement()) ryuPositionX -= delta * .1f + 1.5;
 			if(ryuPositionX < -8715) ryuPositionX += delta * .1f + 1.5;			
 		}	
 		
@@ -374,8 +342,22 @@ public class Play extends BasicGameState{
 			ryuHP = -6;
 			ryuDead = 0;
 			sbg.enterState(0);
+		}		
+	}
+	
+	public boolean movement(){		
+		if(ryuPunch == false) {
+			if(ryuLowKick == false){
+				if(ryuHadouken == false){
+					if(ryuShoryuken == false){
+						if(ryuTatsaku == false){
+							if(enableInput) return true;
+						}
+					}
+				}
+			}
 		}
-		
+		return false;
 	}
 	
 	public int getID(){
