@@ -5,6 +5,7 @@ import org.newdawn.slick.state.*;
 
 public class Play extends BasicGameState{
 	
+	//ryu bools
 	boolean ryuStatic = true;
 	boolean ryuRight = false;
 	boolean ryuLeft = false;
@@ -19,8 +20,11 @@ public class Play extends BasicGameState{
 	boolean round1Bool = true;	
 	boolean enableInput = false;
 	
+	//ryu hadouken ball
 	long time, getInitialTime = 0, hadoukenBallStart;
-	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd;
+	
+	//ryu sounds
+	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd;
 	
 	int round1Scale = 50;
 	int ryuDead;
@@ -30,6 +34,7 @@ public class Play extends BasicGameState{
 	int[] duration = {200, 200};
 	String s;
 	
+	//ryu pos, mp and hp
 	float ryuPositionX = 0;
 	float ryuPositionY = -156;
 	float shiftX = 100;
@@ -38,13 +43,19 @@ public class Play extends BasicGameState{
 	float ryuMP = 8;
 	float ryuHP = 8;
 	
+	//thug vars
+	int thug1HP = 5;
+	float thug1PosX, thug1PosY;
+	boolean showThug1 = true;
+	
 	private SpriteSheet ryuStaticSheet, ryuRightSheet, ryuLeftSheet, ryuPunchSheet, ryuLowKickSheet, 
 							ryuHadoukenSheet, ryuHadoukenBallSheet, ryuShoryukenSheet, ryuTatsakuSheet,
-							fireSheet, ryuHurtSheet, thug1WalkSheet;
+							fireSheet, ryuHurtSheet, thug1WalkSheet, thug1StaticSheet, thug1DeadSheet;
 	
 	private Animation ryuSprite, ryuStaticAnimation, ryuRightAnimation, ryuLeftAnimation, ryuPunchAnimation, 
 							ryuLowKickAnimation, ryuHadoukenAnimation, ryuHadoukenBallAnimation, ryuShoryukenAnimation,
-							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation, thug1WalkAnimation;
+							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation, thug1WalkAnimation, thug1StaticAnimation,
+							thug1DeadAnimation;
 	
 	public Play(int state){		
 	}
@@ -63,6 +74,7 @@ public class Play extends BasicGameState{
 		tatsakuSnd = new Sound("res/Sounds/tatsaku.wav");
 		hurtSnd = new Sound("res/Sounds/hurt.wav");
 		deadSnd = new Sound("res/Sounds/dead.wav");
+		punchedSnd = new Sound("res/Sounds/punched.wav");
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		
@@ -93,8 +105,12 @@ public class Play extends BasicGameState{
 		fireAnimation = new Animation(fireSheet, 300);
 		
 		//enemy animations
-		thug1WalkSheet = new SpriteSheet("res/enemies/thug1Walk.png", 45, 79);
+		thug1WalkSheet = new SpriteSheet("res/enemies/thug1Walk.png", 53, 93);
 		thug1WalkAnimation = new Animation(thug1WalkSheet, 300);
+		thug1StaticSheet = new SpriteSheet("res/enemies/thug1Static.png", 63, 93);
+		thug1StaticAnimation = new Animation(thug1StaticSheet, 150);
+		thug1DeadSheet = new SpriteSheet("res/enemies/thug1Dead.png", 95, 93);
+		thug1DeadAnimation = new Animation(thug1DeadSheet, 150);
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -125,7 +141,7 @@ public class Play extends BasicGameState{
 		//round1 animation and statistics
 		if (round1Bool) round1Image.draw(500, 100, round1Scale, round1Scale);		
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);
-		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP, 1100, 60);
+		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX+ "\nThug1PosY" + thug1PosY, 1100, 60);
 		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
@@ -154,8 +170,10 @@ public class Play extends BasicGameState{
 			if(quit == false) g.clear();
 		}
 		
-		//enemi animations
-		thug1WalkAnimation.draw(ryuPositionX + 1100, ryuPositionY + 300);
+		//enemy animations
+		thug1PosX = ryuPositionX + 1100;
+		thug1PosY = ryuPositionY + 300;
+		thug1StaticAnimation.draw(thug1PosX, thug1PosY);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
@@ -342,9 +360,20 @@ public class Play extends BasicGameState{
 			ryuHP = -6;
 			ryuDead = 0;
 			sbg.enterState(0);
-		}		
+		}
+		
+		//enemy interaction
+		if(thug1PosX + ryuPositionX < -723 && thug1PosX + ryuPositionX > -882){
+			 punched();
+		}
 	}
 	
+	private void punched() {
+		if(ryuHadouken || ryuLowKick || ryuPunch || ryuShoryuken || ryuTatsaku){
+			if(!punchedSnd.playing()) punchedSnd.play();
+		}
+	}
+
 	public boolean movement(){		
 		if(ryuPunch == false) {
 			if(ryuLowKick == false){
