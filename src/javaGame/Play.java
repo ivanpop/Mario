@@ -44,7 +44,7 @@ public class Play extends BasicGameState{
 	float ryuHP = 8;
 	
 	//thug vars
-	int thug1HP = 5;
+	int thug1HP = 96;
 	float thug1PosX, thug1PosY;
 	boolean showThug1 = true;
 	
@@ -68,6 +68,7 @@ public class Play extends BasicGameState{
 		healthBox = new Image("res/other/health.png");
 		mpBox = new Image("res/other/mp.png");
 		
+		//sounds
 		round1Snd = new Sound("res/Sounds/round1.wav");
 		punchAndKickSnd = new Sound("res/Sounds/punch.wav");	
 		hadoukenSnd = new Sound("res/Sounds/hadouken.wav");
@@ -111,7 +112,7 @@ public class Play extends BasicGameState{
 		thug1StaticSheet = new SpriteSheet("res/enemies/thug1Static.png", 63, 93);
 		thug1StaticAnimation = new Animation(thug1StaticSheet, 150);
 		thug1DeadSheet = new SpriteSheet("res/enemies/thug1Dead.png", 95, 93);
-		thug1DeadAnimation = new Animation(thug1DeadSheet, 150);
+		thug1DeadAnimation = new Animation(thug1DeadSheet, 680);
 		thug1HurtSheet = new SpriteSheet("res/enemies/thug1Hurt.png", 43, 93);
 		thug1HurtAnimation = new Animation(thug1HurtSheet, 10);
 		
@@ -146,7 +147,7 @@ public class Play extends BasicGameState{
 		//round1 animation and statistics
 		if (round1Bool) round1Image.draw(500, 100, round1Scale, round1Scale);		
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);
-		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX+ "\nThug1PosY" + thug1PosY, 1100, 60);
+		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug1HP" + thug1HP, 1100, 60);
 		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
@@ -178,7 +179,7 @@ public class Play extends BasicGameState{
 		//enemy animations
 		thug1PosX = ryuPositionX + 1100;
 		thug1PosY = ryuPositionY + 300;		
-		thug1Sprite.draw(thug1PosX, thug1PosY);
+		if(showThug1) thug1Sprite.draw(thug1PosX, thug1PosY);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
@@ -195,33 +196,12 @@ public class Play extends BasicGameState{
 			round1Scale = 1;
 		}
 		
-		
-		if (ryuPunch) ryuLeft = ryuRight = ryuStatic = ryuLowKick = ryuHadouken = ryuShoryuken = ryuTatsaku = ryuHurt = false;
-		if (ryuLowKick) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuHadouken = ryuShoryuken = ryuTatsaku = ryuHurt = false;
-		if (ryuHadouken) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHurt = false;
-		if (ryuHurt) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHadouken = false;
-		
 		if (ryuTatsaku == true) {
 			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuShoryuken = ryuHurt = false;
 			ryuPositionX -= delta * .1f + 3;
 		}
 		
-		if (ryuShoryuken == true) {
-			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuTatsaku = ryuHurt = false;			
-			ryuPositionY++;
-		}
-		
-		if(ryuLeft == ryuRight == ryuPunch == false) {
-			if(ryuLowKick == false){
-				if(ryuHadouken == false){
-					if(ryuShoryuken == false){
-						if(ryuTatsaku == false){
-							if(ryuHurt == false) ryuStatic = true;
-						}
-					}
-				}
-			}
-		}
+		removeDuplications();
 			
 		//ryu Up, Down, Left and Right animation			
 		if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_RIGHT)){			
@@ -367,15 +347,22 @@ public class Play extends BasicGameState{
 			sbg.enterState(0);
 		}
 		
-		//enemy interaction
+		//enemy1 interaction
 		if(thug1PosX + ryuPositionX < -723 && thug1PosX + ryuPositionX > -882 && ryuAttack()){
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug1Sprite = thug1HurtAnimation;
-			getInitialTime2 = time;			
+			getInitialTime2 = time;
+			thug1HP--;
 		}
 		
 		if(delay(getInitialTime2, 10)) {			
-			thug1Sprite = thug1StaticAnimation;
+			thug1Sprite = thug1StaticAnimation;			
+		}
+		
+		if(thug1HP <= 0){
+			thug1Sprite = thug1DeadAnimation;
+			if(!deadSnd.playing() && showThug1)deadSnd.play();
+			if(delay(getInitialTime2, 2000)) showThug1 = false;
 		}
 	}
 	
@@ -408,6 +395,32 @@ public class Play extends BasicGameState{
 	
 	public int getID(){
 		return 1;
+	}
+	
+	public void removeDuplications(){
+		if (ryuPunch) ryuLeft = ryuRight = ryuStatic = ryuLowKick = ryuHadouken = ryuShoryuken = ryuTatsaku = ryuHurt = false;
+		if (ryuLowKick) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuHadouken = ryuShoryuken = ryuTatsaku = ryuHurt = false;
+		if (ryuHadouken) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHurt = false;
+		if (ryuHurt) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHadouken = false;
+		
+
+		
+		if (ryuShoryuken == true) {
+			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuTatsaku = ryuHurt = false;			
+			ryuPositionY++;
+		}
+		
+		if(ryuLeft == ryuRight == ryuPunch == false) {
+			if(ryuLowKick == false){
+				if(ryuHadouken == false){
+					if(ryuShoryuken == false){
+						if(ryuTatsaku == false){
+							if(ryuHurt == false) ryuStatic = true;
+						}
+					}
+				}
+			}
+		}
 	}
 	
 }
