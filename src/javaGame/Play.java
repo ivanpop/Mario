@@ -177,7 +177,7 @@ public class Play extends BasicGameState{
 		}
 		
 		//enemy animations
-		thug1PosX = ryuPositionX + 1100;
+		thug1PosX = ryuPositionX + 200;
 		thug1PosY = ryuPositionY + 300;		
 		if(showThug1) thug1Sprite.draw(thug1PosX, thug1PosY);
 	}
@@ -276,11 +276,7 @@ public class Play extends BasicGameState{
 				ryuHadouken = ryuHadoukenBall = false;
 			}			
 			
-			if(ryuHadouken == true){
-				if(hadoukenBallStart + 950 <= time){
-					ryuHadoukenBall = true;						
-				}
-			}
+			if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
 			
 			if(ryuHadoukenBall)	hadoukenBallX += 1 * delta;			
 			
@@ -322,8 +318,7 @@ public class Play extends BasicGameState{
 				enableInput = true;
 			}
 			
-			if(input.isKeyDown(Input.KEY_M)) sbg.enterState(0);			
-			
+			if(input.isKeyDown(Input.KEY_M)) sbg.enterState(0);
 			if(input.isKeyDown(Input.KEY_Q)) System.exit(0);			
 		}		
 		
@@ -348,7 +343,7 @@ public class Play extends BasicGameState{
 		}
 		
 		//enemy1 interaction
-		if(thug1PosX + ryuPositionX < -723 && thug1PosX + ryuPositionX > -882 && ryuAttack()){
+		if(thugAtRyu(thug1PosX, thug1PosY) && ryuAttack()){
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug1Sprite = thug1HurtAnimation;
 			getInitialTime2 = time;
@@ -366,6 +361,11 @@ public class Play extends BasicGameState{
 		}
 	}
 	
+	public boolean thugAtRyu(float x, float y){
+		if(x < 190 && x > 115 && y < 130 && y > 70)	return true;
+		else return false;
+	}
+	
 	private boolean ryuAttack() {
 		if(ryuHadouken || ryuLowKick || ryuPunch || ryuShoryuken || ryuTatsaku){
 			return true;			
@@ -373,12 +373,12 @@ public class Play extends BasicGameState{
 		else return false;
 	}
 
-	public boolean delay(long startTime, int number){		
+	public boolean delay(long startTime, int number){
 		if(startTime + number <= time) return true;			
 		else return false;
 	}
 	
-	public boolean movement(){		
+	public boolean movement(){
 		if(ryuPunch == false) {
 			if(ryuLowKick == false){
 				if(ryuHadouken == false){
