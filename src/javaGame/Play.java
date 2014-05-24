@@ -168,8 +168,7 @@ public class Play extends BasicGameState{
 		if (ryuTatsaku) ryuTatsakuAnimation.draw(shiftX, shiftY);
 		
 		if (ryuHurt) {
-			hurtSnd.stop();		
-			hurtSnd.play(1, 0.5f);
+			if(!hurtSnd.playing()) hurtSnd.play();
 			ryuHurtAnimation.draw(shiftX, shiftY);			
 		} 
 				
@@ -200,115 +199,9 @@ public class Play extends BasicGameState{
 			round1Scale = 1;
 		}
 		
-		if (ryuTatsaku == true) {
-			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuShoryuken = ryuHurt = false;
-			ryuPositionX -= delta * .1f + 3;
-		}
-		
 		removeDuplications();
 			
-		//ryu Up, Down, Left and Right animation			
-		if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_RIGHT)){			
-			if(enableInput) ryuSprite = ryuRightAnimation;	
-		}
-		
-		else if(input.isKeyDown(Input.KEY_LEFT)){			
-			if(enableInput) ryuSprite = ryuLeftAnimation;
-		} 
-		
-		else ryuSprite = ryuStaticAnimation;		
-		
-		//ryu up movement
-		if(input.isKeyDown(Input.KEY_UP)){			
-			if (movement())	ryuPositionY += delta * .1f + 1;
-			if(ryuPositionY > -60) ryuPositionY -= delta * .1f + 1;
-		}
-		
-		//ryu down movement
-		if(input.isKeyDown(Input.KEY_DOWN)){
-			if (movement()) ryuPositionY -= delta * .1f + 1;
-			if(ryuPositionY < -397)	ryuPositionY += delta * .1f + 1;			
-		}
-	
-		//ryu left movement
-		if(input.isKeyDown(Input.KEY_LEFT)){
-			if (movement()) ryuPositionX += delta * .1f + 1.5;							
-			if(ryuPositionX > 0) ryuPositionX -= delta * .1f + 1.5;			
-		}
-		
-		//ryu right movement
-		if(input.isKeyDown(Input.KEY_RIGHT)){
-			if (movement()) ryuPositionX -= delta * .1f + 1.5;
-			if(ryuPositionX < -8715) ryuPositionX += delta * .1f + 1.5;			
-		}	
-		
-		//punch
-		if(input.isKeyPressed(Input.KEY_A) && enableInput){			
-			getInitialTime = time;			
-			punchAndKickSnd.play();					
-			ryuPunch = true;			
-		} 	
-		
-		if(delay(getInitialTime, 400)){	
-			ryuPunchAnimation.restart();
-			ryuPunch = false;						
-		}
-		
-		//lowKick
-		if(input.isKeyPressed(Input.KEY_S) && enableInput){
-			getInitialTime = time;
-			punchAndKickSnd.play();
-			ryuLowKick = true;
-		}
-		
-		if(delay(getInitialTime, 400)){
-			ryuLowKickAnimation.restart();
-			ryuLowKick = false;
-		}
-		
-		//hadouken
-			if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput){
-				getInitialTime = hadoukenBallStart = time;
-				hadoukenSnd.play();
-				ryuHadouken = true;				
-				hadoukenBallX = shiftX + 100;
-				ryuMP = ryuMP - 2;
-			}			
-			
-			if(delay(getInitialTime, 2000)){
-				ryuHadoukenAnimation.restart();
-				ryuHadouken = ryuHadoukenBall = false;
-			}			
-			
-			if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
-			
-			if(ryuHadoukenBall)	hadoukenBallX += 1 * delta;			
-			
-		//shoryuken			
-			if(input.isKeyPressed(Input.KEY_F) && ryuPositionY < -95 && ryuMP > 2 && enableInput){
-				getInitialTime = time;
-				shoryukenSnd.play();
-				ryuShoryuken = true;
-				ryuMP = ryuMP - 2;
-			}
-			
-			if(delay(getInitialTime, 600)){
-				ryuShoryukenAnimation.restart();
-				ryuShoryuken = false;				
-			}
-			
-		//tatsaku
-			if(input.isKeyPressed(Input.KEY_G) && ryuMP > 3 && enableInput){
-				getInitialTime = time;
-				tatsakuSnd.play(0.98f, 1);
-				ryuTatsaku = true;
-				ryuMP = ryuMP - 3;
-			}
-			
-			if(delay(getInitialTime, 1500)){
-				ryuTatsakuAnimation.restart();
-				ryuTatsaku = false;
-			}
+		ryuPhysics(input, delta, sbg);		
 			
 		//menu
 		if(input.isKeyDown(Input.KEY_ESCAPE)) quit = true;				
@@ -324,26 +217,6 @@ public class Play extends BasicGameState{
 			
 			if(input.isKeyDown(Input.KEY_M)) sbg.enterState(0);
 			if(input.isKeyDown(Input.KEY_Q)) System.exit(0);			
-		}		
-		
-		//ryu MP regen
-		if (ryuMP < 8) ryuMP += 0.003;		
-		
-		//ryu hurt by fire
-		if (ryuPositionX < -1843 && ryuPositionX > -1938 && ryuPositionY < -60 && ryuPositionY > - 161)	{
-			ryuHurt = true;
-			ryuHP = ryuHP - 0.04f;
-		}
-		else ryuHurt = false;
-		
-		//ryu dead
-		if (ryuHP <= 0 && ryuHP > -5) ryuDead = 1;
-		
-		if(ryuDead == 1){
-			deadSnd.play();
-			ryuHP = -6;
-			ryuDead = 0;
-			sbg.enterState(0);
 		}
 		
 		//enemy1 interaction------------------------------------------
@@ -353,14 +226,11 @@ public class Play extends BasicGameState{
 			thug1Sprite = thug1HurtAnimation;
 			getInitialTime2 = time;
 			thug1HP--;
-			
-			if(delay(getInitialTime2, 10)) {			
-				thug1Sprite = thug1StaticAnimation;			
-			}
 		}
 		
-
-		
+		if(delay(getInitialTime2, 10) && thug1Sprite == thug1HurtAnimation) {			
+			thug1Sprite = thug1StaticAnimation;			
+		}		
 		
 		//thug dies
 		if(thug1HP <= 0){
@@ -371,18 +241,155 @@ public class Play extends BasicGameState{
 		
 		if(thugAtRyu(thug1PosX, thug1PosY) && !ryuAttack() && enemyAttackChance() && showThug1){			
 			thug1Sprite = thug1HitAnimation;
+			getInitialTime2 = time;
 			if(!punchedSnd.playing()) punchedSnd.play();
 			ryuHurt = true;
+			ryuHP--;
 		}	
 
-		
+		if(delay(getInitialTime2, 10) && thug1Sprite == thug1HitAnimation) {			
+			if(delay(getInitialTime2, 1000)) {
+				thug1Sprite = thug1StaticAnimation;
+				ryuHurt = false;
+			}
+		}
 		
 	}
 	//----------------------------------------------------------------
 	
+	public void ryuPhysics(Input input, int delta, StateBasedGame sbg){
+		//ryu Up, Down, Left and Right animation			
+				if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_RIGHT)){			
+					if(enableInput) ryuSprite = ryuRightAnimation;	
+				}
+				
+				else if(input.isKeyDown(Input.KEY_LEFT)){			
+					if(enableInput) ryuSprite = ryuLeftAnimation;
+				} 
+				
+				else ryuSprite = ryuStaticAnimation;		
+				
+				//ryu up movement
+				if(input.isKeyDown(Input.KEY_UP)){			
+					if (movement())	ryuPositionY += delta * .1f + 1;
+					if(ryuPositionY > -60) ryuPositionY -= delta * .1f + 1;
+				}
+				
+				//ryu down movement
+				if(input.isKeyDown(Input.KEY_DOWN)){
+					if (movement()) ryuPositionY -= delta * .1f + 1;
+					if(ryuPositionY < -397)	ryuPositionY += delta * .1f + 1;			
+				}
+			
+				//ryu left movement
+				if(input.isKeyDown(Input.KEY_LEFT)){
+					if (movement()) ryuPositionX += delta * .1f + 1.5;							
+					if(ryuPositionX > 0) ryuPositionX -= delta * .1f + 1.5;			
+				}
+				
+				//ryu right movement
+				if(input.isKeyDown(Input.KEY_RIGHT)){
+					if (movement()) ryuPositionX -= delta * .1f + 1.5;
+					if(ryuPositionX < -8715) ryuPositionX += delta * .1f + 1.5;			
+				}	
+				
+				//punch
+				if(input.isKeyPressed(Input.KEY_A) && enableInput){			
+					getInitialTime = time;			
+					punchAndKickSnd.play();					
+					ryuPunch = true;			
+				} 	
+				
+				if(delay(getInitialTime, 400)){	
+					ryuPunchAnimation.restart();
+					ryuPunch = false;						
+				}
+				
+				//lowKick
+				if(input.isKeyPressed(Input.KEY_S) && enableInput){
+					getInitialTime = time;
+					punchAndKickSnd.play();
+					ryuLowKick = true;
+				}
+				
+				if(delay(getInitialTime, 400)){
+					ryuLowKickAnimation.restart();
+					ryuLowKick = false;
+				}
+				
+				//hadouken
+					if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput){
+						getInitialTime = hadoukenBallStart = time;
+						hadoukenSnd.play();
+						ryuHadouken = true;				
+						hadoukenBallX = shiftX + 100;
+						ryuMP = ryuMP - 2;
+					}			
+					
+					if(delay(getInitialTime, 2000)){
+						ryuHadoukenAnimation.restart();
+						ryuHadouken = ryuHadoukenBall = false;
+					}			
+					
+					if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
+					
+					if(ryuHadoukenBall)	hadoukenBallX += 1 * delta;			
+					
+				//shoryuken			
+					if(input.isKeyPressed(Input.KEY_F) && ryuPositionY < -95 && ryuMP > 2 && enableInput){
+						getInitialTime = time;
+						shoryukenSnd.play();
+						ryuShoryuken = true;
+						ryuMP = ryuMP - 2;
+					}
+					
+					if(delay(getInitialTime, 600)){
+						ryuShoryukenAnimation.restart();
+						ryuShoryuken = false;				
+					}
+					
+				//tatsaku
+					if(input.isKeyPressed(Input.KEY_G) && ryuMP > 3 && enableInput){
+						getInitialTime = time;
+						tatsakuSnd.play(0.98f, 1);
+						ryuTatsaku = true;
+						ryuMP = ryuMP - 3;
+					}
+					
+					if(delay(getInitialTime, 1500)){
+						ryuTatsakuAnimation.restart();
+						ryuTatsaku = false;
+					}
+					
+					if (ryuTatsaku == true) {
+						ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuShoryuken = ryuHurt = false;
+						ryuPositionX -= delta * .1f + 3;
+					}
+					
+				//ryu MP regen
+				if (ryuMP < 8) ryuMP += 0.003;	
+				
+				//ryu dead
+				if (ryuHP <= 0 && ryuHP > -5) ryuDead = 1;
+				
+				if(ryuDead == 1){
+					deadSnd.play();
+					ryuHP = -6;
+					ryuDead = 0;
+					sbg.enterState(0);
+				}
+				
+				//ryu hurt by fire
+				if (ryuPositionX < -1843 && ryuPositionX > -1938 && ryuPositionY < -60 && ryuPositionY > - 161)	{
+					ryuHurt = true;
+					ryuHP = ryuHP - 0.04f;
+					getInitialTime = time;
+				}
+	}
+	
 	public boolean enemyAttackChance(){
 		Random rand = new Random();
-		if(rand.nextInt(1000) > 990 ) return true;
+		if(rand.nextInt(1000) > 995 ) return true;
 		else return false;
 	}
 	
