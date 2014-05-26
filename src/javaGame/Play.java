@@ -151,7 +151,7 @@ public class Play extends BasicGameState{
 		//round1 animation and statistics
 		if (round1Bool) round1Image.draw(500, 100, round1Scale, round1Scale);		
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);
-		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug1HP" + thug1HP, 1100, 60);
+		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug1HP" + thug1HP +"\nHadoukenB" + hadoukenBallX, 1100, 60);
 		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
@@ -180,7 +180,7 @@ public class Play extends BasicGameState{
 		}
 		
 		//enemy animations
-		thug1PosX = ryuPositionX + 200;
+		thug1PosX = ryuPositionX + 600;
 		thug1PosY = ryuPositionY + 300;		
 		if(showThug1) thug1Sprite.draw(thug1PosX, thug1PosY);
 	}
@@ -239,6 +239,7 @@ public class Play extends BasicGameState{
 			if(delay(getInitialTime2, 2000)) showThug1 = false;
 		}
 		
+		//thug hit ryu
 		if(thugAtRyu(thug1PosX, thug1PosY) && !ryuAttack() && enemyAttackChance() && showThug1){			
 			thug1Sprite = thug1HitAnimation;
 			getInitialTime2 = time;
@@ -246,12 +247,20 @@ public class Play extends BasicGameState{
 			ryuHurt = true;
 			ryuHP--;
 		}	
-
+		
 		if(delay(getInitialTime2, 10) && thug1Sprite == thug1HitAnimation) {			
 			if(delay(getInitialTime2, 1000)) {
 				thug1Sprite = thug1StaticAnimation;
 				ryuHurt = false;
 			}
+		}
+		
+		//thug hit by hadouken
+		if(ryuHadouken &&  hadoukenAtThug(thug1PosX)){
+			if(!punchedSnd.playing()) punchedSnd.play();
+			thug1Sprite = thug1HurtAnimation;
+			getInitialTime2 = time;
+			thug1HP -= 9;
 		}
 		
 	}
@@ -333,7 +342,7 @@ public class Play extends BasicGameState{
 					
 					if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
 					
-					if(ryuHadoukenBall)	hadoukenBallX += 1 * delta;			
+					if(ryuHadoukenBall)	hadoukenBallX += 0.5 * delta;			
 					
 				//shoryuken			
 					if(input.isKeyPressed(Input.KEY_F) && ryuPositionY < -95 && ryuMP > 2 && enableInput){
@@ -387,9 +396,16 @@ public class Play extends BasicGameState{
 				}
 	}
 	
-	public boolean enemyAttackChance(){
+	public boolean enemyAttackChance(){		
 		Random rand = new Random();
-		if(rand.nextInt(1000) > 995 ) return true;
+		if(rand.nextInt(1000) > 990) {			
+			return true;			
+		}				
+		else return false;		
+	}
+	
+	public boolean hadoukenAtThug(float x){
+		if(hadoukenBallX < x + 50 && hadoukenBallX > x - 50) return true;
 		else return false;
 	}
 	
