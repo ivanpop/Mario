@@ -11,7 +11,6 @@ public class Menu extends BasicGameState{
 
 	int posX, posY;
 	boolean quitQ1 = false;
-	boolean musicOn = true;
 	boolean marioReady = false;
 	
 	private Music music;
@@ -34,11 +33,9 @@ public class Menu extends BasicGameState{
 		noBtn = new Image("res/other/no.png");		
 		
 		marioReadySheet = new SpriteSheet("res/ryuAnimations/ryuReady.png", 74, 125);
-		marioReadyAnimation = new Animation(marioReadySheet, 130);
+		marioReadyAnimation = new Animation(marioReadySheet, 155);
 		marioStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 79, 125);		
-		marioStaticAnimation = new Animation(marioStaticSheet, 100);
-		if (musicOn) music.loop();	
-			
+		marioStaticAnimation = new Animation(marioStaticSheet, 100);			
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -49,15 +46,15 @@ public class Menu extends BasicGameState{
 		optionsBtn.draw(100, 200);
 		creditsBtn.draw(100, 300);
 		exitBtn.draw(100, 400);
-		
+		if (!music.playing()) music.loop();	
+
 		if(!marioReady) marioReadyAnimation.draw(555, 100, 400, 400);	
 		marioReadyAnimation.stopAt(6);
 		if (marioReadyAnimation.isStopped()){
 			marioReady = true;
 		}	
 		
-		if(marioReady) marioStaticAnimation.draw(555, 100, 400, 400);
-		
+		if(marioReady) marioStaticAnimation.draw(555, 100, 400, 400);		
 		
 		if (quitQ1) {
 			quitQ.draw(330, 520);
@@ -65,7 +62,6 @@ public class Menu extends BasicGameState{
 			noBtn.draw(700, 600);
 		}
 	}	
-
 
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
 		//Get mouse position
@@ -119,9 +115,7 @@ public class Menu extends BasicGameState{
 			}
 		}
 		
-	}
-	
-	
+	}	
 	
 	public int getID(){
 		return 0;
