@@ -23,15 +23,17 @@ public class Play extends BasicGameState{
 	boolean enableInput = false;
 	
 	//ryu hadouken ball
-	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, hadoukenBallStart;
+	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, hadoukenBallStart;			
 	
 	//ryu sounds
-	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd;
+	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
+				goSnd;
 	
 	int round1Scale = 50;
 	int ryuDead;
+	int staticDuration = 0;
 	
-	Image worldMap, round1Image, healthBar, healthBox, mpBox;
+	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg;
 	
 	int[] duration = {200, 200};
 	String s;
@@ -81,6 +83,7 @@ public class Play extends BasicGameState{
 		healthBar = new Image("res/other/healthBar.png");
 		healthBox = new Image("res/other/health.png");
 		mpBox = new Image("res/other/mp.png");
+		goImg = new Image("res/other/go.png");
 		
 		//sounds
 		round1Snd = new Sound("res/Sounds/round1.wav");
@@ -91,6 +94,7 @@ public class Play extends BasicGameState{
 		hurtSnd = new Sound("res/Sounds/hurt.wav");
 		deadSnd = new Sound("res/Sounds/dead.wav");
 		punchedSnd = new Sound("res/Sounds/punched.wav");
+		goSnd = new Sound("res/Sounds/go.wav");
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		
@@ -402,9 +406,26 @@ public class Play extends BasicGameState{
 			getInitialTime4 = time;
 			thug2HP -= 9;
 		}
+		//----------------------------------------------------------------
 		
+		if(!round1Bool)showGoSign(input);
 	}
 	//----------------------------------------------------------------
+
+	public void showGoSign(Input input){
+		staticDuration++; 
+		
+		if((staticDuration > 400) && ryuStatic){
+			if(!goSnd.playing()){
+				goSnd.play();
+				staticDuration = 0;
+			}
+		}
+		
+		if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_LEFT) || !ryuStatic){
+			staticDuration = 0;
+		}
+	}
 	
 	public void ryuPhysics(Input input, int delta, StateBasedGame sbg){
 		//ryu Up, Down, Left and Right animation			
@@ -439,7 +460,7 @@ public class Play extends BasicGameState{
 				//ryu right movement
 				if(input.isKeyDown(Input.KEY_RIGHT)){
 					if (movement()) ryuPositionX -= delta * .1f + 1.5;
-					if(ryuPositionX < -8715) ryuPositionX += delta * .1f + 1.5;			
+					if(ryuPositionX < -8715) ryuPositionX += delta * .1f + 1.5;					
 				}	
 				
 				//punch
@@ -555,7 +576,7 @@ public class Play extends BasicGameState{
 	}
 	
 	public boolean ryuAttack() {
-		if(ryuHadouken || ryuLowKick || ryuPunch || ryuShoryuken || ryuTatsaku){
+		if(ryuHadouken || ryuLowKick || ryuPunch || ryuShoryuken || ryuTatsaku){			
 			return true;			
 		}
 		else return false;
@@ -612,4 +633,3 @@ public class Play extends BasicGameState{
 	}
 	
 }
-//547
