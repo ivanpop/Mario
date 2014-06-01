@@ -238,7 +238,9 @@ public class Play extends BasicGameState{
 		//thug3
 		thug3PosX = ryuPositionX + 1300;
 		thug3PosY = ryuPositionY + 400;		
-		if(showThug3) thug3Sprite.draw(thug3PosX, thug3PosY);		
+		if(showThug3) thug3Sprite.draw(thug3PosX, thug3PosY);	
+		
+		if (goSnd.playing()) goImg.draw(1000, 100);
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{
@@ -418,7 +420,7 @@ public class Play extends BasicGameState{
 		if((staticDuration > 400) && ryuStatic){
 			if(!goSnd.playing()){
 				goSnd.play();
-				staticDuration = 0;
+				staticDuration = 0;				
 			}
 		}
 		
