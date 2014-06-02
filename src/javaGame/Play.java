@@ -1,7 +1,8 @@
 package javaGame;
 
 import java.util.Random;
-
+import java.awt.Font;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
 
@@ -29,11 +30,9 @@ public class Play extends BasicGameState{
 	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
 				goSnd;
 	
-	int round1Scale = 50;
-	int ryuDead;
-	int staticDuration = 0;
+	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 6099;
 	
-	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg;
+	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg;
 	
 	int[] duration = {200, 200};
 	String s;
@@ -74,6 +73,10 @@ public class Play extends BasicGameState{
 							thug2DeadAnimation, thug2HurtAnimation, thug2Sprite, thug2HitAnimation, thug3WalkAnimation, thug3StaticAnimation,
 							thug3DeadAnimation, thug3HurtAnimation, thug3Sprite, thug3HitAnimation;
 	
+	//font
+	Font font;
+	TrueTypeFont ttf;
+	
 	public Play(int state){		
 	}
 	
@@ -84,6 +87,10 @@ public class Play extends BasicGameState{
 		healthBox = new Image("res/other/health.png");
 		mpBox = new Image("res/other/mp.png");
 		goImg = new Image("res/other/go.png");
+		timerBcg = new Image("res/other/timerBcg.png");
+		
+		font = new Font("Impact", Font.BOLD, 70);
+	    ttf = new TrueTypeFont(font, true);
 		
 		//sounds
 		round1Snd = new Sound("res/Sounds/round1.wav");
@@ -191,12 +198,16 @@ public class Play extends BasicGameState{
 		if (ryuMP >= 5) mpBox.draw(288, 606);
 		if (ryuMP >= 6) mpBox.draw(333, 606);
 		if (ryuMP >= 7) mpBox.draw(378, 606);
-		if (ryuMP >= 8) mpBox.draw(423, 606);		
+		if (ryuMP >= 8) mpBox.draw(423, 606);
+		
+		//draw timer
+		timerBcg.draw(604, 607);
+		ttf.drawString(610, 600, "" + timer/100, Color.white);
 		
 		//round1 animation and statistics
 		if (round1Bool) round1Image.draw(500, 100, round1Scale, round1Scale);		
-		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);
 		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug1HP" + thug1HP +"\nHadoukenB" + hadoukenBallX, 1100, 60);
+		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);				
 		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
@@ -256,6 +267,8 @@ public class Play extends BasicGameState{
 			enableInput = true;
 			round1Scale = 1;
 		}
+		
+		timer -= delta * 0.061;
 		
 		removeDuplications();
 			
