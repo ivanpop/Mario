@@ -24,13 +24,13 @@ public class Play extends BasicGameState{
 	boolean enableInput = false;
 	
 	//ryu hadouken ball
-	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, hadoukenBallStart;			
+	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, getInitialTime5 = 0, hadoukenBallStart;			
 	
 	//ryu sounds
 	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
 				goSnd;
 	
-	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 6099;
+	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 99999;
 	
 	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg;
 	
@@ -47,20 +47,24 @@ public class Play extends BasicGameState{
 	float ryuHP = 8;
 	
 	//thug vars
-	int thug1HP = 96;
+	int thug1HP = 144;
 	float thug1PosX, thug1PosY;
 	int moveY1 = 144;
 	int moveX1 = 1300;
+	int moveY2 = 500;
+	int moveX2 = 2000;
+	int moveY3 = 500;
+	int moveX3 = 4000;
 	boolean showThug1 = true;
 	
-	int thug2HP = 96;
+	int thug2HP = 144;
 	float thug2PosX, thug2PosY;	
 	boolean showThug2 = true;
 	boolean thug1HitRyu = true;
 	boolean thug2HitRyu = true;
 	boolean thug3HitRyu = true;
 	
-	int thug3HP = 96;
+	int thug3HP = 144;
 	float thug3PosX, thug3PosY;
 	boolean showThug3 = true;
 	
@@ -237,13 +241,13 @@ public class Play extends BasicGameState{
 		if(showThug1) thug1Sprite.draw(thug1PosX, thug1PosY);
 		
 		//thug2	
-		thug2PosX = ryuPositionX + 900;
-		thug2PosY = ryuPositionY + 400;
+		thug2PosX = ryuPositionX + moveX2;
+		thug2PosY = ryuPositionY + moveY2;
 		if(showThug2) thug2Sprite.draw(thug2PosX, thug2PosY);
 		
 		//thug3
-		thug3PosX = ryuPositionX + 1300;
-		thug3PosY = ryuPositionY + 400;		
+		thug3PosX = ryuPositionX + moveX3;
+		thug3PosY = ryuPositionY + moveY3;		
 		if(showThug3) thug3Sprite.draw(thug3PosX, thug3PosY);
 		
 				
@@ -294,9 +298,9 @@ public class Play extends BasicGameState{
 			if(input.isKeyDown(Input.KEY_Q)) System.exit(0);			
 		}
 		
-		//enemy1 interaction------------------------------------------
-		//ryuHitThug			
-		if (ryuPositionX < -70){
+		//enemy1 interaction------------------------------------------	
+		//thug1 AI  
+		if (ryuPositionX < -70 && thug1HP > 0){
 			if(thug1PosY < 117) {
 				moveY1 += delta * .1f + 1;
 				thug1Sprite = thug1WalkAnimation;
@@ -313,10 +317,12 @@ public class Play extends BasicGameState{
 			}
 			
 			if(thug1PosX < 150) {
-				moveX1 += delta * .1f;
+				moveX1 += delta * .1f + 2;
 				thug1Sprite = thug1WalkAnimation;
 			}
 		}
+		
+		//ryuHitThug
 		if(thugAtRyu(thug1PosX, thug1PosY) && ryuAttack()){
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug1Sprite = thug1HurtAnimation;
@@ -329,15 +335,17 @@ public class Play extends BasicGameState{
 		}		
 		
 		//thug dies
-		if(thug1HP <= 0){
+		if(thug1HP <= 0){			
 			thug1Sprite = thug1DeadAnimation;
 			if(!deadSnd.playing() && showThug1)deadSnd.play();
-			if(delay(getInitialTime2, 2000)) showThug1 = false;
+			if(delay(getInitialTime2, 2000)){
+				showThug1 = false;				
+			}
 		}
 		
 		//thug hit ryu
 		if(thugAtRyu(thug1PosX, thug1PosY) && !ryuAttack() && enemyAttackChance() && showThug1 && thug1HitRyu){			
-			thug1Sprite = thug1HitAnimation;
+			thug1Sprite = thug1HitAnimation;			
 			getInitialTime2 = time;
 			if(!punchedSnd.playing()) punchedSnd.play();
 			ryuHurt = true;			
@@ -359,10 +367,33 @@ public class Play extends BasicGameState{
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug1Sprite = thug1HurtAnimation;
 			getInitialTime2 = time;
-			thug1HP -= 9;
+			thug1HP -= 11;
 		}
 		
-		//enemy2 interaction------------------------------------------		
+		//enemy2 interaction------------------------------------------
+		//thug2 AI  
+		if (ryuPositionX < -800 && thug2HP > 0){
+			if(thug1PosY < 117) {
+				moveY2 += delta * .1f + 1;
+				thug2Sprite = thug2WalkAnimation;
+			}
+			
+			if(thug2PosY > 120) {
+				moveY2 -= delta * .1f;
+				thug2Sprite = thug2WalkAnimation;
+			}		
+			
+			if(thug2PosX > 170) {
+				moveX2 -= delta * .1f;
+				thug2Sprite = thug2WalkAnimation;
+			}
+			
+			if(thug2PosX < 150) {
+				moveX2 += delta * .1f + 2;
+				thug2Sprite = thug2WalkAnimation;
+			}
+		}	
+		
 		//ryuHitThug
 		if(thugAtRyu(thug2PosX, thug2PosY) && ryuAttack()){
 			if(!punchedSnd.playing()) punchedSnd.play();
@@ -395,7 +426,7 @@ public class Play extends BasicGameState{
 		if(delay(getInitialTime3, 10) && thug2Sprite == thug2HitAnimation) {			
 			if(delay(getInitialTime3, 1000)) {
 				thug2Sprite = thug2StaticAnimation;
-				ryuHurt = false;
+				ryuHurt = false;				
 			}
 		}
 		
@@ -406,10 +437,33 @@ public class Play extends BasicGameState{
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug2Sprite = thug2HurtAnimation;
 			getInitialTime3 = time;
-			thug2HP -= 9;
+			thug2HP -= 11;
 		}
 		
-		//enemy3 interaction------------------------------------------		
+		//enemy3 interaction------------------------------------------	
+		//thug3 AI  
+		if (ryuPositionX < -1600 && thug3HP > 0){
+			if(thug1PosY < 117) {
+				moveY3 += delta * .1f + 1;
+				thug3Sprite = thug3WalkAnimation;
+			}
+			
+			if(thug3PosY > 120) {
+				moveY3 -= delta * .1f;
+				thug3Sprite = thug3WalkAnimation;
+			}		
+			
+			if(thug3PosX > 170) {
+				moveX3 -= delta * .1f;
+				thug3Sprite = thug3WalkAnimation;
+			}
+			
+			if(thug3PosX < 150) {
+				moveX3 += delta * .1f + 2;
+				thug3Sprite = thug3WalkAnimation;
+			}
+		}	
+		
 		//ryuHitThug
 		if(thugAtRyu(thug3PosX, thug3PosY) && ryuAttack()){
 			if(!punchedSnd.playing()) punchedSnd.play();
@@ -453,7 +507,7 @@ public class Play extends BasicGameState{
 			if(!punchedSnd.playing()) punchedSnd.play();
 			thug3Sprite = thug3HurtAnimation;
 			getInitialTime4 = time;
-			thug2HP -= 9;
+			thug3HP -= 11;
 		}
 		//----------------------------------------------------------------
 		
@@ -479,11 +533,13 @@ public class Play extends BasicGameState{
 	public void ryuPhysics(Input input, int delta, StateBasedGame sbg){
 		//ryu Up, Down, Left and Right animation			
 		if(input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_RIGHT)){			
-			if(enableInput) ryuSprite = ryuRightAnimation;	
+			if(enableInput) ryuSprite = ryuRightAnimation;
+			ryuHurt = false;
 		}
 		
 		else if(input.isKeyDown(Input.KEY_LEFT)){			
 			if(enableInput) ryuSprite = ryuLeftAnimation;
+			ryuHurt = false;
 		} 
 		
 		else ryuSprite = ryuStaticAnimation;		
@@ -611,7 +667,7 @@ public class Play extends BasicGameState{
 	public boolean enemyAttackChance(){		
 		Random rand = new Random();			
 		
-		if(rand.nextInt(1000) > 950) return true;				
+		if(rand.nextInt(1000) > 900) return true;				
 		else return false;		
 	}
 	
