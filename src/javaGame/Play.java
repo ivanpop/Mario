@@ -22,17 +22,18 @@ public class Play extends BasicGameState{
 	boolean quit = false;
 	boolean round1Bool = true;	
 	boolean enableInput = false;
+	boolean chickenHP = true;
 	
 	//ryu hadouken ball
 	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, getInitialTime5 = 0, hadoukenBallStart;			
 	
 	//ryu sounds
 	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
-				goSnd;
+				goSnd, chickenSnd;
 	
 	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 99999;
 	
-	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg;
+	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg, chicken;
 	
 	int[] duration = {200, 200};
 	String s;
@@ -97,6 +98,7 @@ public class Play extends BasicGameState{
 		mpBox = new Image("res/other/mp.png");
 		goImg = new Image("res/other/go.png");
 		timerBcg = new Image("res/other/timerBcg.png");
+		chicken = new Image("res/other/chicken.png");
 		
 		font = new Font("Impact", Font.BOLD, 70);
 	    ttf = new TrueTypeFont(font, true);
@@ -111,6 +113,7 @@ public class Play extends BasicGameState{
 		deadSnd = new Sound("res/Sounds/dead.wav");
 		punchedSnd = new Sound("res/Sounds/punched.wav");
 		goSnd = new Sound("res/Sounds/go.wav");
+		chickenSnd = new Sound("res/Sounds/chicken.wav");
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		
@@ -250,6 +253,8 @@ public class Play extends BasicGameState{
 		thug3PosY = ryuPositionY + moveY3;		
 		if(showThug3) thug3Sprite.draw(thug3PosX, thug3PosY);
 		
+		//chicken
+		if (chickenHP) chicken.draw(ryuPositionX + 2300, ryuPositionY + 400, 2);
 				
 		if(quit == true){
 			g.drawString("Resume (R)", 550, 300);
@@ -442,7 +447,7 @@ public class Play extends BasicGameState{
 		
 		//enemy3 interaction------------------------------------------	
 		//thug3 AI  
-		if (ryuPositionX < -1600 && thug3HP > 0){
+		if (ryuPositionX < -2400 && thug3HP > 0){
 			if(thug1PosY < 117) {
 				moveY3 += delta * .1f + 1;
 				thug3Sprite = thug3WalkAnimation;
@@ -661,6 +666,13 @@ public class Play extends BasicGameState{
 				ryuHurt = true;
 				ryuHP = ryuHP - 0.04f;
 				getInitialTime = time;
+			}
+			
+			//ryu gets chicken
+			if (ryuPositionX < -2142 && ryuPositionY < -230 && ryuPositionY > -240 && chickenHP)	{
+				ryuHP = 8;				
+				if (!chickenSnd.playing()) chickenSnd.play();
+				chickenHP = false;
 			}
 	}
 	
