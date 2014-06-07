@@ -50,13 +50,14 @@ public class Play extends BasicGameState{
 	float ryuHP = 8;
 	
 	//thug vars
-	//thug1
+	//thug1	
 	int thug1HP = 144;
 	float thug1PosX, thug1PosY;
 	int moveY1 = 144;
 	int moveX1 = 1600;
 	boolean showThug1 = true;
 	boolean thug1HitRyu = true;
+	boolean thug1Dead = false;
 	
 	//thug2
 	int thug2HP = 144;
@@ -64,7 +65,8 @@ public class Play extends BasicGameState{
 	int moveY2 = 500;
 	int moveX2 = 2300;
 	boolean showThug2 = true;	
-	boolean thug2HitRyu = true;	
+	boolean thug2HitRyu = true;
+	boolean thug2Dead = false;
 	
 	//thug3
 	int thug3HP = 144;
@@ -73,6 +75,7 @@ public class Play extends BasicGameState{
 	int moveX3 = 4300;
 	boolean showThug3 = true;
 	boolean thug3HitRyu = true;
+	boolean thug3Dead = false;
 	
 	//thug4
 	int thug4HP = 144;
@@ -81,6 +84,7 @@ public class Play extends BasicGameState{
 	int moveX4 = 6300;
 	boolean showThug4 = true;
 	boolean thug4HitRyu = true;
+	boolean thug4Dead = false;
 	
 	private SpriteSheet ryuStaticSheet, ryuRightSheet, ryuLeftSheet, ryuPunchSheet, ryuLowKickSheet, 
 							ryuHadoukenSheet, ryuHadoukenBallSheet, ryuShoryukenSheet, ryuTatsakuSheet,
@@ -372,7 +376,7 @@ public class Play extends BasicGameState{
 			}
 			
 			//ryuHitThug
-			if(thugAtRyu(thug1PosX, thug1PosY) && ryuAttack()){
+			if(thugAtRyu(thug1PosX, thug1PosY) && ryuAttack() && !thug1Dead){
 				if(!punchedSnd.playing()) punchedSnd.play();
 				thug1Sprite = thug1HurtAnimation;
 				getInitialTime2 = time;
@@ -384,8 +388,9 @@ public class Play extends BasicGameState{
 			}		
 			
 			//thug dies
-			if(thug1HP <= 0){			
+			if(thug1HP <= 0){				
 				thug1Sprite = thug1DeadAnimation;
+				thug1Dead = true;				
 				if(!deadSnd.playing() && showThug1)deadSnd.play();			
 				if(delay(getInitialTime2, 2000)){
 					showThug1 = false;					
@@ -446,7 +451,7 @@ public class Play extends BasicGameState{
 			}	
 			
 			//ryuHitThug
-			if(thugAtRyu(thug2PosX, thug2PosY) && ryuAttack()){
+			if(thugAtRyu(thug2PosX, thug2PosY) && ryuAttack() && !thug2Dead){
 				if(!punchedSnd.playing()) punchedSnd.play();
 				thug2Sprite = thug2HurtAnimation;
 				getInitialTime3 = time;
@@ -460,6 +465,7 @@ public class Play extends BasicGameState{
 			//thug dies
 			if(thug2HP <= 0){
 				thug2Sprite = thug2DeadAnimation;
+				thug2Dead = true;
 				if(!deadSnd.playing() && showThug2)deadSnd.play();
 				if(delay(getInitialTime3, 2000)) showThug2 = false;
 			}
@@ -518,7 +524,7 @@ public class Play extends BasicGameState{
 			}	
 			
 			//ryuHitThug
-			if(thugAtRyu(thug3PosX, thug3PosY) && ryuAttack()){
+			if(thugAtRyu(thug3PosX, thug3PosY) && ryuAttack() && !thug3Dead){
 				if(!punchedSnd.playing()) punchedSnd.play();
 				thug3Sprite = thug3HurtAnimation;
 				getInitialTime4 = time;
@@ -532,6 +538,7 @@ public class Play extends BasicGameState{
 			//thug dies
 			if(thug3HP <= 0){
 				thug3Sprite = thug3DeadAnimation;
+				thug3Dead = true;
 				if(!deadSnd.playing() && showThug3)deadSnd.play();
 				if(delay(getInitialTime4, 2000)) showThug3 = false;
 			}
@@ -564,7 +571,7 @@ public class Play extends BasicGameState{
 			}
 		}
 		
-		//enemy1 interaction------------------------------------------	
+		//enemy4 interaction------------------------------------------	
 		//thug4 AI 
 		if (!quit){
 			if (ryuPositionX < -3600 && thug4HP > 0){
@@ -590,7 +597,7 @@ public class Play extends BasicGameState{
 			}
 			
 			//ryuHitThug
-			if(thugAtRyu(thug4PosX, thug4PosY) && ryuAttack()){
+			if(thugAtRyu(thug4PosX, thug4PosY) && ryuAttack() && !thug4Dead){
 				if(!punchedSnd.playing()) punchedSnd.play();
 				thug4Sprite = thug4HurtAnimation;
 				getInitialTime5 = time;
@@ -604,6 +611,7 @@ public class Play extends BasicGameState{
 			//thug dies
 			if(thug4HP <= 0){			
 				thug4Sprite = thug4DeadAnimation;
+				thug4Dead = true;
 				if(!deadSnd.playing() && showThug4)deadSnd.play();			
 				if(delay(getInitialTime5, 2000)){
 					showThug4 = false;					
