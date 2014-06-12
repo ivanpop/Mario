@@ -28,7 +28,7 @@ public class Play extends BasicGameState{
 	
 	//ryu hadouken ball
 	long time, getInitialTime = 0, getInitialTime2 = 0, getInitialTime3 = 0, getInitialTime4 = 0, getInitialTime5 = 0,
-			getInitialTime6 = 0, getInitialTime7 = 0, hadoukenBallStart;			
+			getInitialTime6 = 0, getInitialTime7 = 0, getInitialTime8 = 0, hadoukenBallStart;			
 	
 	//ryu sounds
 	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
@@ -105,6 +105,15 @@ public class Play extends BasicGameState{
 	boolean thug6HitRyu = true;
 	boolean thug6Dead = false;
 	
+	//thug7
+	int thug7HP = 144;
+	float thug7PosX, thug7PosY;
+	int moveY7 = 500;
+	int moveX7 = 7800;
+	boolean showThug7 = true;
+	boolean thug7HitRyu = true;
+	boolean thug7Dead = false;
+	
 	private SpriteSheet ryuStaticSheet, ryuRightSheet, ryuLeftSheet, ryuPunchSheet, ryuLowKickSheet, 
 							ryuHadoukenSheet, ryuHadoukenBallSheet, ryuShoryukenSheet, ryuTatsakuSheet,
 							fireSheet, ryuHurtSheet, 
@@ -113,7 +122,8 @@ public class Play extends BasicGameState{
 							thug3WalkSheet, thug3StaticSheet, thug3DeadSheet, thug3HurtSheet, thug3HitSheet,
 							thug4WalkSheet, thug4StaticSheet, thug4DeadSheet, thug4HurtSheet, thug4HitSheet,
 							thug5WalkSheet, thug5StaticSheet, thug5DeadSheet, thug5HurtSheet, thug5HitSheet,
-							thug6WalkSheet, thug6StaticSheet, thug6DeadSheet, thug6HurtSheet, thug6HitSheet;
+							thug6WalkSheet, thug6StaticSheet, thug6DeadSheet, thug6HurtSheet, thug6HitSheet,
+							thug7WalkSheet, thug7StaticSheet, thug7DeadSheet, thug7HurtSheet, thug7HitSheet;
 	
 	private Animation ryuSprite, ryuStaticAnimation, ryuRightAnimation, ryuLeftAnimation, ryuPunchAnimation, 
 							ryuLowKickAnimation, ryuHadoukenAnimation, ryuHadoukenBallAnimation, ryuShoryukenAnimation,
@@ -123,7 +133,8 @@ public class Play extends BasicGameState{
 							thug3WalkAnimation, thug3StaticAnimation, thug3DeadAnimation, thug3HurtAnimation, thug3Sprite, thug3HitAnimation,
 							thug4WalkAnimation, thug4StaticAnimation, thug4DeadAnimation, thug4HurtAnimation, thug4Sprite, thug4HitAnimation,
 							thug5WalkAnimation, thug5StaticAnimation, thug5DeadAnimation, thug5HurtAnimation, thug5Sprite, thug5HitAnimation,
-							thug6WalkAnimation, thug6StaticAnimation, thug6DeadAnimation, thug6HurtAnimation, thug6Sprite, thug6HitAnimation;
+							thug6WalkAnimation, thug6StaticAnimation, thug6DeadAnimation, thug6HurtAnimation, thug6Sprite, thug6HitAnimation,
+							thug7WalkAnimation, thug7StaticAnimation, thug7DeadAnimation, thug7HurtAnimation, thug7Sprite, thug7HitAnimation;
 	
 	//font
 	Font font, font1, font2;
@@ -274,6 +285,20 @@ public class Play extends BasicGameState{
 		thug6HitAnimation = new Animation(thug6HitSheet, 10);
 		
 		thug6Sprite = thug6StaticAnimation;
+		
+		//thug7
+		thug7WalkSheet = new SpriteSheet("res/enemies/thug7Walk.png", 53, 93);
+		thug7WalkAnimation = new Animation(thug7WalkSheet, 300);
+		thug7StaticSheet = new SpriteSheet("res/enemies/thug7Static.png", 63, 93);
+		thug7StaticAnimation = new Animation(thug7StaticSheet, 150);
+		thug7DeadSheet = new SpriteSheet("res/enemies/thug7Dead.png", 95, 93);
+		thug7DeadAnimation = new Animation(thug7DeadSheet, 680);
+		thug7HurtSheet = new SpriteSheet("res/enemies/thug7Hurt.png", 43, 93);
+		thug7HurtAnimation = new Animation(thug7HurtSheet, 10);
+		thug7HitSheet = new SpriteSheet("res/enemies/thug7Hit.png", 82, 93);
+		thug7HitAnimation = new Animation(thug7HitSheet, 10);
+		
+		thug7Sprite = thug7StaticAnimation;
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -359,6 +384,11 @@ public class Play extends BasicGameState{
 		thug6PosX = ryuPositionX + moveX6;
 		thug6PosY = ryuPositionY + moveY6;		
 		if(showThug6) thug6Sprite.draw(thug6PosX, thug6PosY);
+		
+		//thug7
+		thug7PosX = ryuPositionX + moveX7;
+		thug7PosY = ryuPositionY + moveY7;		
+		if(showThug7) thug6Sprite.draw(thug7PosX, thug7PosY);
 		
 		//chicken
 		if (chickenHP) chicken.draw(ryuPositionX + 2500, ryuPositionY + 400, 2);			
@@ -839,7 +869,7 @@ public class Play extends BasicGameState{
 				thug6HitRyu = false;
 			}	
 			
-			if(delay(getInitialTime6, 10) && thug5Sprite == thug5HitAnimation) {			
+			if(delay(getInitialTime7, 10) && thug5Sprite == thug6HitAnimation) {			
 				if(delay(getInitialTime7, 1000)) {
 					thug6Sprite = thug6StaticAnimation;
 					ryuHurt = false;				
@@ -854,6 +884,81 @@ public class Play extends BasicGameState{
 				thug6Sprite = thug6HurtAnimation;
 				getInitialTime7 = time;
 				thug6HP -= 11;
+			}
+		}
+		
+		//enemy7 interaction------------------------------------------	
+		//thug7 AI 
+		if (!quit){
+			if (ryuPositionX < -5100 && thug7HP > 0){
+				if(thug7PosY < 117) {
+					moveY7 += delta * .1f + 1;
+					thug7Sprite = thug7WalkAnimation;
+				}
+				
+				if(thug7PosY > 120) {
+					moveY7 -= delta * .1f;
+					thug7Sprite = thug7WalkAnimation;
+				}		
+				
+				if(thug7PosX > 170) {
+					moveX7 -= delta * .1f;
+					thug7Sprite = thug7WalkAnimation;
+				}
+				
+				if(thug7PosX < 150 && !ryuTatsaku) {
+					moveX7 += delta * .1f + 1;
+					thug7Sprite = thug7WalkAnimation;
+				}
+			}
+			
+			//ryuHitThug
+			if(thugAtRyu(thug7PosX, thug7PosY) && ryuAttack() && !thug7Dead){
+				if(!punchedSnd.playing()) punchedSnd.play();
+				thug7Sprite = thug7HurtAnimation;
+				getInitialTime8 = time;
+				thug7HP--;
+			}
+			
+			if(delay(getInitialTime8, 10) && thug6Sprite == thug7HurtAnimation) {			
+				thug7Sprite = thug7StaticAnimation;			
+			}		
+			
+			//thug dies
+			if(thug7HP <= 0){			
+				thug7Sprite = thug7DeadAnimation;
+				thug7Dead = true;
+				if(!deadSnd.playing() && showThug7)deadSnd.play();			
+				if(delay(getInitialTime8, 2000)){
+					showThug7 = false;					
+				}
+			}		
+			
+			//thug hit ryu
+			if(thugAtRyu(thug7PosX, thug7PosY) && !ryuAttack() && enemyAttackChance() && showThug7 && thug7HitRyu){			
+				thug7Sprite = thug7HitAnimation;			
+				getInitialTime8 = time;
+				if(!punchedSnd.playing()) punchedSnd.play();
+				ryuHurt = true;			
+				ryuHP--;		
+				thug7HitRyu = false;
+			}	
+			
+			if(delay(getInitialTime8, 10) && thug7Sprite == thug7HitAnimation) {			
+				if(delay(getInitialTime8, 1000)) {
+					thug7Sprite = thug7StaticAnimation;
+					ryuHurt = false;				
+				}			
+			}	
+			
+			if(delay(getInitialTime8, 3000)) thug7HitRyu = true;
+			
+			//thug hit by hadouken
+			if(ryuHadouken &&  hadoukenAtThug(thug7PosX, thug7PosY)){
+				if(!punchedSnd.playing()) punchedSnd.play();
+				thug7Sprite = thug7HurtAnimation;
+				getInitialTime8 = time;
+				thug7HP -= 11;
 			}
 		}
 		
