@@ -35,7 +35,7 @@ public class Play extends BasicGameState{
 	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
 				goSnd, chickenSnd;
 	
-	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 99999;
+	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 6099;
 	
 	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
 	
@@ -238,7 +238,7 @@ public class Play extends BasicGameState{
 		//enemy animations
 		//thug1
 		thug1WalkSheet = new SpriteSheet("res/enemies/thug1Walk.png", 53, 93);
-		thug1WalkAnimation = new Animation(thug1WalkSheet, 300);
+		thug1WalkAnimation = new Animation(thug1WalkSheet, 300);		
 		thug1StaticSheet = new SpriteSheet("res/enemies/thug1Static.png", 63, 93);
 		thug1StaticAnimation = new Animation(thug1StaticSheet, 150);
 		thug1DeadSheet = new SpriteSheet("res/enemies/thug1Dead.png", 95, 93);
@@ -255,7 +255,7 @@ public class Play extends BasicGameState{
 		thug2WalkAnimation = new Animation(thug2WalkSheet, 300);
 		thug2StaticSheet = new SpriteSheet("res/enemies/thug2Static.png", 63, 93);
 		thug2StaticAnimation = new Animation(thug2StaticSheet, 150);
-		thug2DeadSheet = new SpriteSheet("res/enemies/thug2Dead.png", 95, 93);
+		thug2DeadSheet = new SpriteSheet("res/enemies/thug2Dead.png", 97, 93);
 		thug2DeadAnimation = new Animation(thug2DeadSheet, 680);
 		thug2HurtSheet = new SpriteSheet("res/enemies/thug2Hurt.png", 43, 93);
 		thug2HurtAnimation = new Animation(thug2HurtSheet, 10);
@@ -283,7 +283,7 @@ public class Play extends BasicGameState{
 		thug4WalkAnimation = new Animation(thug4WalkSheet, 300);
 		thug4StaticSheet = new SpriteSheet("res/enemies/thug4Static.png", 63, 93);
 		thug4StaticAnimation = new Animation(thug4StaticSheet, 150);
-		thug4DeadSheet = new SpriteSheet("res/enemies/thug4Dead.png", 95, 93);
+		thug4DeadSheet = new SpriteSheet("res/enemies/thug4Dead.png", 101, 93);
 		thug4DeadAnimation = new Animation(thug4DeadSheet, 680);
 		thug4HurtSheet = new SpriteSheet("res/enemies/thug4Hurt.png", 43, 93);
 		thug4HurtAnimation = new Animation(thug4HurtSheet, 10);
@@ -311,7 +311,7 @@ public class Play extends BasicGameState{
 		thug6WalkAnimation = new Animation(thug6WalkSheet, 300);
 		thug6StaticSheet = new SpriteSheet("res/enemies/thug6Static.png", 63, 93);
 		thug6StaticAnimation = new Animation(thug6StaticSheet, 150);
-		thug6DeadSheet = new SpriteSheet("res/enemies/thug6Dead.png", 95, 93);
+		thug6DeadSheet = new SpriteSheet("res/enemies/thug6Dead.png", 116, 93);
 		thug6DeadAnimation = new Animation(thug6DeadSheet, 680);
 		thug6HurtSheet = new SpriteSheet("res/enemies/thug6Hurt.png", 43, 93);
 		thug6HurtAnimation = new Animation(thug6HurtSheet, 10);
@@ -325,7 +325,7 @@ public class Play extends BasicGameState{
 		thug7WalkAnimation = new Animation(thug7WalkSheet, 300);
 		thug7StaticSheet = new SpriteSheet("res/enemies/thug7Static.png", 63, 93);
 		thug7StaticAnimation = new Animation(thug7StaticSheet, 150);
-		thug7DeadSheet = new SpriteSheet("res/enemies/thug7Dead.png", 95, 93);
+		thug7DeadSheet = new SpriteSheet("res/enemies/thug7Dead.png", 122, 93);
 		thug7DeadAnimation = new Animation(thug7DeadSheet, 680);
 		thug7HurtSheet = new SpriteSheet("res/enemies/thug7Hurt.png", 43, 93);
 		thug7HurtAnimation = new Animation(thug7HurtSheet, 10);
@@ -337,9 +337,9 @@ public class Play extends BasicGameState{
 		//thug8
 		thug8WalkSheet = new SpriteSheet("res/enemies/thug8Walk.png", 53, 93);
 		thug8WalkAnimation = new Animation(thug8WalkSheet, 300);
-		thug8StaticSheet = new SpriteSheet("res/enemies/thug8Static.png", 63, 93);
+		thug8StaticSheet = new SpriteSheet("res/enemies/thug8Static.png", 35, 93);
 		thug8StaticAnimation = new Animation(thug8StaticSheet, 150);
-		thug8DeadSheet = new SpriteSheet("res/enemies/thug8Dead.png", 95, 93);
+		thug8DeadSheet = new SpriteSheet("res/enemies/thug8Dead.png", 107, 93);
 		thug8DeadAnimation = new Animation(thug8DeadSheet, 680);
 		thug8HurtSheet = new SpriteSheet("res/enemies/thug8Hurt.png", 43, 93);
 		thug8HurtAnimation = new Animation(thug8HurtSheet, 10);
@@ -353,7 +353,7 @@ public class Play extends BasicGameState{
 		thug9WalkAnimation = new Animation(thug9WalkSheet, 300);
 		thug9StaticSheet = new SpriteSheet("res/enemies/thug9Static.png", 63, 93);
 		thug9StaticAnimation = new Animation(thug9StaticSheet, 150);
-		thug9DeadSheet = new SpriteSheet("res/enemies/thug9Dead.png", 95, 93);
+		thug9DeadSheet = new SpriteSheet("res/enemies/thug9Dead.png", 100, 93);
 		thug9DeadAnimation = new Animation(thug9DeadSheet, 680);
 		thug9HurtSheet = new SpriteSheet("res/enemies/thug9Hurt.png", 43, 93);
 		thug9HurtAnimation = new Animation(thug9HurtSheet, 10);
@@ -363,15 +363,15 @@ public class Play extends BasicGameState{
 		thug9Sprite = thug9StaticAnimation;
 		
 		//thug10
-		thug10WalkSheet = new SpriteSheet("res/enemies/thug10Walk.png", 53, 93);
+		thug10WalkSheet = new SpriteSheet("res/enemies/thug10Walk.png", 90, 140);
 		thug10WalkAnimation = new Animation(thug10WalkSheet, 300);
-		thug10StaticSheet = new SpriteSheet("res/enemies/thug10Static.png", 63, 93);
+		thug10StaticSheet = new SpriteSheet("res/enemies/thug10Static.png", 95, 150);
 		thug10StaticAnimation = new Animation(thug10StaticSheet, 150);
-		thug10DeadSheet = new SpriteSheet("res/enemies/thug10Dead.png", 95, 93);
+		thug10DeadSheet = new SpriteSheet("res/enemies/thug10Dead.png", 164, 140);
 		thug10DeadAnimation = new Animation(thug10DeadSheet, 680);
-		thug10HurtSheet = new SpriteSheet("res/enemies/thug10Hurt.png", 43, 93);
+		thug10HurtSheet = new SpriteSheet("res/enemies/thug10Hurt.png", 65, 140);
 		thug10HurtAnimation = new Animation(thug10HurtSheet, 10);
-		thug10HitSheet = new SpriteSheet("res/enemies/thug10Hit.png", 82, 93);
+		thug10HitSheet = new SpriteSheet("res/enemies/thug10Hit.png", 123, 140);
 		thug10HitAnimation = new Animation(thug10HitSheet, 10);
 		
 		thug10Sprite = thug10StaticAnimation;
