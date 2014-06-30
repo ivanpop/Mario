@@ -14,8 +14,8 @@ public class Menu extends BasicGameState{
 	boolean marioReady = false;
 	
 	private Music music;
-	private SpriteSheet marioReadySheet, marioStaticSheet;
-	private Animation marioReadyAnimation, marioStaticAnimation;	
+	private SpriteSheet ryuReadySheet, ryuStaticSheet;
+	private Animation ryuReadyAnimation, ryuStaticAnimation;	
 	
 	public Menu(int state){
 		
@@ -32,10 +32,10 @@ public class Menu extends BasicGameState{
 		yesBtn = new Image("res/other/yes.png");
 		noBtn = new Image("res/other/no.png");		
 		
-		marioReadySheet = new SpriteSheet("res/ryuAnimations/ryuReady.png", 74, 125);
-		marioReadyAnimation = new Animation(marioReadySheet, 155);
-		marioStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 79, 125);		
-		marioStaticAnimation = new Animation(marioStaticSheet, 100);			
+		ryuReadySheet = new SpriteSheet("res/ryuAnimations/ryuReady.png", 74, 125);
+		ryuReadyAnimation = new Animation(ryuReadySheet, 155);
+		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 79, 125);		
+		ryuStaticAnimation = new Animation(ryuStaticSheet, 100);			
 	}
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
@@ -48,13 +48,13 @@ public class Menu extends BasicGameState{
 		exitBtn.draw(100, 400);
 		if (!music.playing()) music.loop();	
 
-		if(!marioReady) marioReadyAnimation.draw(555, 100, 400, 400);	
-		marioReadyAnimation.stopAt(6);
-		if (marioReadyAnimation.isStopped()){
+		if(!marioReady) ryuReadyAnimation.draw(555, 100, 400, 400);	
+		ryuReadyAnimation.stopAt(6);
+		if (ryuReadyAnimation.isStopped()){
 			marioReady = true;
 		}	
 		
-		if(marioReady) marioStaticAnimation.draw(555, 100, 400, 400);		
+		if(marioReady) ryuStaticAnimation.draw(555, 100, 400, 400);		
 		
 		if (quitQ1) {
 			quitQ.draw(330, 520);
