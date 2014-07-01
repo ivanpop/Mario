@@ -32,12 +32,12 @@ public class Play extends BasicGameState{
 					getInitialTime11 = 0, hadoukenBallStart;			
 	
 	//ryu sounds
-	private Sound round1Snd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
+	private Sound round1Snd, youWinSnd, youLoseSnd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
 				goSnd, chickenSnd;
 	
-	int round1Scale = 50, ryuDead, staticDuration = 0, timer = 6099;
+	int round1Scale = 50, youWinScale = 50, youWinState = 0, ryuDead, staticDuration = 0, timer = 10099;
 	
-	Image worldMap, round1Image, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
+	Image worldMap, round1Image, youWinImage, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
 	
 	int[] duration = {200, 200};
 	String s;
@@ -180,6 +180,7 @@ public class Play extends BasicGameState{
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		worldMap = new Image("res/other/world1.png");	
 		round1Image = new Image("res/other/round1.png");
+		youWinImage = new Image("res/other/youWin.png");
 		healthBar = new Image("res/other/healthBar.png");
 		healthBox = new Image("res/other/health.png");
 		mpBox = new Image("res/other/mp.png");
@@ -206,6 +207,8 @@ public class Play extends BasicGameState{
 		punchedSnd = new Sound("res/Sounds/punched.wav");
 		goSnd = new Sound("res/Sounds/go.wav");
 		chickenSnd = new Sound("res/Sounds/chicken.wav");
+		youWinSnd = new Sound("res/Sounds/youWin.wav");
+		youLoseSnd = new Sound("res/Sounds/youLose.wav");
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		
@@ -419,6 +422,9 @@ public class Play extends BasicGameState{
 		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug2PosY" + thug2PosY + "\nThug1HP" + thug1HP +"\nHadoukenB" + hadoukenBallX + "\nMove" + moveY1, 1100, 60);
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);				
 		
+		//youWin animation
+		if (youWinState == 1) youWinImage.draw(500, 100, youWinScale, youWinScale);	
+		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
 		
@@ -515,6 +521,20 @@ public class Play extends BasicGameState{
 			round1Scale = 1;
 		}
 		
+		//you win animation and sound
+		if (youWinState == 1) {
+			youWinScale += 2;
+			enableInput = false;
+			ryuSprite = ryuReadyAnimation;
+		}
+		
+		if (youWinScale >= 100 && youWinScale <= 105) youWinSnd.play(1.03f, 0.6f);
+		
+		if (youWinScale >= 600 && youWinScale <= 610) {
+			
+			sbg.enterState(0);
+		}
+
 		//update timer 
 		if (!quit) timer -= delta * 0.061;		
 		
@@ -1287,6 +1307,10 @@ public class Play extends BasicGameState{
 		
 		//----------------------------------------------------------------
 		
+		if (thug1HP < 0 && thug2HP < 0 && thug3HP < 0 && thug4HP < 0 && thug5HP < 0 && thug6HP < 0 && thug7HP < 0 && thug8HP < 0 && thug9HP < 0 && thug10HP < 0 ){
+			youWinState = 1;
+		}
+		
 		if(!round1Bool && !quit)showGoSign(input);
 	}
 	//----------------------------------------------------------------
@@ -1362,6 +1386,8 @@ public class Play extends BasicGameState{
 			punchAndKickSnd.play();
 			ryuLowKick = true;
 		}
+		
+		if(input.isKeyPressed(Input.KEY_H)) youWinState = 1;
 		
 		if(delay(getInitialTime, 400)){
 			ryuLowKickAnimation.restart();
