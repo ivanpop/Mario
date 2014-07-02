@@ -13,6 +13,7 @@ public class Play extends BasicGameState{
 	boolean round1Bool = true;	
 	boolean enableInput = false;
 	boolean chickenHP = true;
+	boolean winState = false;	
 	
 	//ryu bools
 	boolean ryuStatic = true;
@@ -35,7 +36,7 @@ public class Play extends BasicGameState{
 	private Sound round1Snd, youWinSnd, youLoseSnd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
 				goSnd, chickenSnd;
 	
-	int round1Scale = 50, youWinScale = 50, youWinState = 0, ryuDead, staticDuration = 0, timer = 10099;
+	int round1Scale = 50, youWinScale1 = 50, youWinScale2 = 50, ryuDead, staticDuration = 0, timer = 9999;
 	
 	Image worldMap, round1Image, youWinImage, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
 	
@@ -144,7 +145,7 @@ public class Play extends BasicGameState{
 	
 	private SpriteSheet ryuStaticSheet, ryuRightSheet, ryuLeftSheet, ryuPunchSheet, ryuLowKickSheet, 
 							ryuHadoukenSheet, ryuHadoukenBallSheet, ryuShoryukenSheet, ryuTatsakuSheet,
-							fireSheet, ryuHurtSheet, ryuWinSheet, ryuReadySheet, 
+							fireSheet, ryuHurtSheet, ryuWin1Sheet, ryuWin2Sheet, ryuReadySheet, 
 							thug1WalkSheet, thug1StaticSheet, thug1DeadSheet, thug1HurtSheet, thug1HitSheet,
 							thug2WalkSheet, thug2StaticSheet, thug2DeadSheet, thug2HurtSheet, thug2HitSheet,
 							thug3WalkSheet, thug3StaticSheet, thug3DeadSheet, thug3HurtSheet, thug3HitSheet,
@@ -158,7 +159,7 @@ public class Play extends BasicGameState{
 	
 	private Animation ryuSprite, ryuStaticAnimation, ryuRightAnimation, ryuLeftAnimation, ryuPunchAnimation, 
 							ryuLowKickAnimation, ryuHadoukenAnimation, ryuHadoukenBallAnimation, ryuShoryukenAnimation,
-							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation, ryuWinAnimation, ryuReadyAnimation,
+							ryuTatsakuAnimation, fireAnimation, ryuHurtAnimation, ryuWin1Animation, ryuWin2Animation, ryuReadyAnimation,
 							thug1WalkAnimation, thug1StaticAnimation, thug1DeadAnimation, thug1HurtAnimation, thug1Sprite, thug1HitAnimation,
 							thug2WalkAnimation, thug2StaticAnimation, thug2DeadAnimation, thug2HurtAnimation, thug2Sprite, thug2HitAnimation, 
 							thug3WalkAnimation, thug3StaticAnimation, thug3DeadAnimation, thug3HurtAnimation, thug3Sprite, thug3HitAnimation,
@@ -231,10 +232,12 @@ public class Play extends BasicGameState{
 		ryuTatsakuAnimation = new Animation(ryuTatsakuSheet, 100);
 		ryuHurtSheet = new SpriteSheet("res/ryuAnimations/ryuHurt.png", 80, 93);
 		ryuHurtAnimation = new Animation(ryuHurtSheet, 500);
-		ryuWinSheet = new SpriteSheet("res/ryuAnimations/ryuWin.png", 80, 93);
-		ryuWinAnimation = new Animation(ryuHurtSheet, 500);
+		ryuWin1Sheet = new SpriteSheet("res/ryuAnimations/ryuWin1.png", 70, 123);
+		ryuWin1Animation = new Animation(ryuWin1Sheet, 250);
+		ryuWin2Sheet = new SpriteSheet("res/ryuAnimations/ryuWin2.png", 70, 100);
+		ryuWin2Animation = new Animation(ryuWin2Sheet, 100);
 		ryuReadySheet = new SpriteSheet("res/ryuAnimations/ryuReady.png", 74, 125);
-		ryuReadyAnimation = new Animation(ryuReadySheet, 155);
+		ryuReadyAnimation = new Animation(ryuReadySheet, 200);
 		
 		ryuSprite = ryuStaticAnimation;
 		
@@ -423,7 +426,7 @@ public class Play extends BasicGameState{
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);				
 		
 		//youWin animation
-		if (youWinState == 1) youWinImage.draw(500, 100, youWinScale, youWinScale);	
+		if (winState) youWinImage.draw(500, 100, youWinScale1, youWinScale1);	
 		
 		//random animations
 		fireAnimation.draw(ryuPositionX + 2000, ryuPositionY + 200);
@@ -511,37 +514,24 @@ public class Play extends BasicGameState{
 		time = gc.getTime();		
 		Input input = gc.getInput();	
 		
-		//round1 animation and sound
-		if (round1Bool) round1Scale += 4;		
-		if (round1Scale >= 100 && round1Scale <= 105) round1Snd.play(1.03f, 0.6f);		
-		
-		if (round1Scale >= 600 && round1Scale <= 610) {
-			round1Bool = false;
-			enableInput = true;
-			round1Scale = 1;
-		}
-		
-		//you win animation and sound
-		if (youWinState == 1) {
-			youWinScale += 2;
-			enableInput = false;
-			ryuSprite = ryuReadyAnimation;
-		}
-		
-		if (youWinScale >= 100 && youWinScale <= 105) youWinSnd.play(1.03f, 0.6f);
-		
-		if (youWinScale >= 600 && youWinScale <= 610) {
-			
-			sbg.enterState(0);
-		}
+		round1Animation();
+		menu(input, sbg);
+		removeDuplications();
+		drawThugs(delta);
+		ryuPhysics(input, delta, sbg);	
+		youWinAnimation(sbg);
 
 		//update timer 
-		if (!quit) timer -= delta * 0.061;		
+		if (!quit && enableInput) timer -= delta * 0.061;		
 		
-		removeDuplications();
-			
-		ryuPhysics(input, delta, sbg);		
-			
+		//end game
+		if (thug1HP < 0 && thug2HP < 0 && thug3HP < 0 && thug4HP < 0 && thug5HP < 0 && thug6HP < 0 && thug7HP < 0 && thug8HP < 0 && thug9HP < 0 && thug10HP < 0 ) winState = true;		
+		
+		//show go sign
+		if (!round1Bool && !quit && !winState)showGoSign(input);
+	}	
+	
+	public void menu(Input input, StateBasedGame sbg){
 		//menu
 		if(input.isKeyDown(Input.KEY_ESCAPE)) quit = true;				
 		
@@ -557,8 +547,45 @@ public class Play extends BasicGameState{
 			if(input.isKeyDown(Input.KEY_Q)) System.exit(0);			
 		}		
 		
-	//drawThug(delta, thug1HP, getInitialTime2, ryuPositionX, thug1PosX, thug1PosY, moveX1, moveY1, thug1Dead, showThug1, thug1HitRyu, thug1Sprite, thug1StaticAnimation, thug1WalkAnimation, thug1HurtAnimation, thug1DeadAnimation, thug1HitAnimation);
+	}
+	
+	public void round1Animation(){
+		//round1 animation and sound
+		if (round1Bool) round1Scale += 4;		
+		if (round1Scale >= 100 && round1Scale <= 105) round1Snd.play(1.03f, 0.6f);		
 		
+		if (round1Scale >= 600 && round1Scale <= 610) {
+			round1Bool = false;
+			enableInput = true;
+			round1Scale = 1;
+		}
+	}
+	
+	public void youWinAnimation(StateBasedGame sbg){		
+		if (winState) {			
+			youWinScale1 += 3;
+			youWinScale2 += 2;
+			enableInput = false;
+			ryuSprite = ryuReadyAnimation;
+			ryuSprite.stopAt(6);
+			
+			if (ryuSprite.isStopped()){				
+				ryuSprite = ryuWin1Animation;
+				ryuSprite.stopAt(3);
+				
+				if(ryuSprite.isStopped()) ryuSprite = ryuWin2Animation;
+			}			
+		}
+		
+		if (youWinScale1 >= 100 && youWinScale1 <= 105) youWinSnd.play(1.03f, 0.6f);
+		
+		if (youWinScale1 >= 600 && youWinScale1 <= 610) youWinScale1 -= 3;	
+		
+		if (youWinScale2 >= 1200 && youWinScale1 <= 1210) sbg.enterState(0);	
+		
+	}
+	
+	public void drawThugs(int delta){
 		//enemy1 interaction------------------------------------------	
 		//thug1 AI 
 		if (!quit){
@@ -1306,14 +1333,7 @@ public class Play extends BasicGameState{
 		}
 		
 		//----------------------------------------------------------------
-		
-		if (thug1HP < 0 && thug2HP < 0 && thug3HP < 0 && thug4HP < 0 && thug5HP < 0 && thug6HP < 0 && thug7HP < 0 && thug8HP < 0 && thug9HP < 0 && thug10HP < 0 ){
-			youWinState = 1;
-		}
-		
-		if(!round1Bool && !quit)showGoSign(input);
 	}
-	//----------------------------------------------------------------
 	
 	public void showGoSign(Input input){
 		staticDuration++; 
@@ -1385,9 +1405,7 @@ public class Play extends BasicGameState{
 			getInitialTime = time;
 			punchAndKickSnd.play();
 			ryuLowKick = true;
-		}
-		
-		if(input.isKeyPressed(Input.KEY_H)) youWinState = 1;
+		}		
 		
 		if(delay(getInitialTime, 400)){
 			ryuLowKickAnimation.restart();
@@ -1543,84 +1561,6 @@ public class Play extends BasicGameState{
 						}
 					}
 				}
-			}
-		}
-	}
-	
-	public void drawThug(int delta, int thugHP, long getInitialTime, float ryuPosition, float thugPosX, float thugPosY, int moveX, int moveY, boolean thugDead,
-			boolean showThug, boolean thugHitRyu, Animation thug, Animation thugStatic, Animation thugWalk, 
-			Animation thugHurt, Animation thugDeadAnimation, Animation thugHit){
-		
-		if (!quit){
-			if (ryuPosition < -170 && thugHP > 0){
-				if(thugPosY < 117) {
-					moveY += delta * .1f + 1;
-					thug = thugWalk;
-				}
-				
-				if(thugPosY > 120) {
-					moveY -= delta * .1f;
-					thug = thugWalk;
-				}		
-				
-				if(thugPosX > 170) {
-					moveX -= delta * .1f;
-					thug = thugWalk;
-				}
-				
-				if(thugPosX < 150 && !ryuTatsaku) {
-					moveX += delta * .1f + 1;
-					thug = thugWalk;
-				}
-			}
-			
-			//ryuHitThug
-			if(thugAtRyu(thugPosX, thugPosY) && ryuAttack() && !thugDead){
-				if(!punchedSnd.playing()) punchedSnd.play();
-				thug = thugHurt;
-				getInitialTime = time;
-				thugHP--;
-			}
-			
-			if(delay(getInitialTime, 10) && thug == thugHurt) {			
-				thug = thugStatic;			
-			}		
-			
-			//thug dies
-			if(thugHP <= 0){				
-				thug = thugDeadAnimation;
-				thugDead = true;				
-				if(!deadSnd.playing() && showThug)deadSnd.play();			
-				if(delay(getInitialTime, 2000)){
-					showThug = false;					
-				}
-			}		
-			
-			//thug hit ryu
-			if(thugAtRyu(thugPosX, thugPosY) && !ryuAttack() && enemyAttackChance() && showThug && thugHitRyu){			
-				thug = thugHit;			
-				getInitialTime = time;
-				if(!punchedSnd.playing()) punchedSnd.play();
-				ryuHurt = true;			
-				ryuHP--;		
-				thugHitRyu = false;
-			}	
-			
-			if(delay(getInitialTime, 10) && thug == thugHit) {			
-				if(delay(getInitialTime, 1000)) {
-					thug = thugStatic;
-					ryuHurt = false;				
-				}			
-			}	
-			
-			if(delay(getInitialTime, 3000)) thugHitRyu = true;
-			
-			//thug hit by hadouken
-			if(ryuHadouken &&  hadoukenAtThug(thugPosX, thugPosY)){
-				if(!punchedSnd.playing()) punchedSnd.play();
-				thug = thugHurt;
-				getInitialTime = time;
-				thugHP -= 11;
 			}
 		}
 	}
