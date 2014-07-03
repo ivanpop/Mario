@@ -276,7 +276,7 @@ public class Play extends BasicGameState{
 		
 		//thug3
 		thug3WalkSheet = new SpriteSheet("res/enemies/thug3Walk.png", 53, 93);
-		thug3WalkAnimation = new Animation(thug3WalkSheet, 300);
+		thug3WalkAnimation = new Animation(thug3WalkSheet, 200);
 		thug3StaticSheet = new SpriteSheet("res/enemies/thug3Static.png", 63, 93);
 		thug3StaticAnimation = new Animation(thug3StaticSheet, 150);
 		thug3DeadSheet = new SpriteSheet("res/enemies/thug3Dead.png", 122, 93);

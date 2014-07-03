@@ -12,6 +12,7 @@ public class Menu extends BasicGameState{
 	int posX, posY;
 	boolean quitQ1 = false;
 	boolean marioReady = false;
+	static boolean musicOn = true;
 	
 	private Music music;
 	private SpriteSheet ryuReadySheet, ryuStaticSheet;
@@ -40,13 +41,14 @@ public class Menu extends BasicGameState{
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		gc.setTargetFrameRate(60);
-		g.drawString("X: " + posX + "\nY: " + posY, 1000, 50);
+		g.drawString("X: " + posX + "\nY: " + posY + " " + Menu.musicOn, 1000, 50);
 		g.drawString("Welcome to Ryu: The Big Adventure!", 100, 50);		
 		playBtn.draw(100, 100);
 		optionsBtn.draw(100, 200);
 		creditsBtn.draw(100, 300);
 		exitBtn.draw(100, 400);
 		if (!music.playing()) music.loop();	
+		if (!musicOn) music.stop();
 
 		if(!marioReady) ryuReadyAnimation.draw(555, 100, 400, 400);	
 		ryuReadyAnimation.stopAt(6);

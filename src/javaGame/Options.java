@@ -7,8 +7,8 @@ import org.newdawn.slick.state.*;
 public class Options extends BasicGameState{	
 
 	Image backImg, checkMark;
-	int posX, posY;
-	boolean musicOn = true;
+	int posX, posY;	
+	boolean showApplySign = false;
 	
 	public Options(int state){
 		
@@ -23,7 +23,8 @@ public class Options extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		g.drawImage(backImg, 100, 100);
 		
-		if (musicOn) g.drawImage(checkMark, 553, 203);
+		if (Menu.musicOn) g.drawImage(checkMark, 553, 203);
+		if (showApplySign)g.drawString("Press back to apply settings.", 500, 500);
 		
 		g.drawString("Enable music:", 400, 200);
 		g.drawRect(550, 200, 20, 20);
@@ -35,7 +36,8 @@ public class Options extends BasicGameState{
 		
 		//back button pressed
 		if((posX > 100 && posX < 311) && (posY > 570 && posY < 619)){
-			if(Mouse.isButtonDown(0)){									
+			if(Mouse.isButtonDown(0)){
+				showApplySign = false;
 				sbg.enterState(0);				
 				posY = 570;
 				Mouse.setCursorPosition(posX, posY);
@@ -44,9 +46,10 @@ public class Options extends BasicGameState{
 		
 		//music on/off
 		if((posX > 550 && posX < 569) && (posY > 500 && posY < 520)){
-			if(Mouse.isButtonDown(0)){									
-				musicOn = !musicOn;	
-				
+			if(Mouse.isButtonDown(0)){
+				showApplySign = true;
+				if(Menu.musicOn) Menu.musicOn = false;
+				else Menu.musicOn = true;
 				try {
 					Thread.sleep(200);
 				} catch (InterruptedException e) {			

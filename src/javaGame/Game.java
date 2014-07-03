@@ -25,7 +25,7 @@ public class Game extends StateBasedGame{
 		this.enterState(menu);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		AppGameContainer appGC;
 		try{
 			appGC = new AppGameContainer(new Game(gameName));
