@@ -209,7 +209,7 @@ public class Play extends BasicGameState{
 		goSnd = new Sound("res/Sounds/go.wav");
 		chickenSnd = new Sound("res/Sounds/chicken.wav");
 		youWinSnd = new Sound("res/Sounds/youWin.wav");
-		youLoseSnd = new Sound("res/Sounds/youLose.wav");
+		youLoseSnd = new Sound("res/Sounds/youLose.wav");		
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		

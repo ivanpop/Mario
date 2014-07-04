@@ -20,7 +20,7 @@ public class Credits extends BasicGameState{
 		backImg = new Image("res/other/back.png");
 	}
 	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{			
 		g.drawImage(backImg, 100, 100);
 		g.drawImage(creditsImg, 500, creditsPos);		
 	}

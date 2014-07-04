@@ -1,5 +1,7 @@
 package javaGame;
 
+import java.awt.Font;
+
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
 import org.newdawn.slick.state.*;
@@ -10,26 +12,33 @@ public class Menu extends BasicGameState{
 			yesBtn, noBtn;	
 
 	int posX, posY;
+	
 	boolean quitQ1 = false;
 	boolean marioReady = false;
 	static boolean musicOn = true;
 	
 	private Music music;
+	
 	private SpriteSheet ryuReadySheet, ryuStaticSheet;
-	private Animation ryuReadyAnimation, ryuStaticAnimation;	
+	private Animation ryuReadyAnimation, ryuStaticAnimation;
+	
+	Font font1;
+	TrueTypeFont ttf1;
 	
 	public Menu(int state){
 		
 	}
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{		
+		font1 = new Font("Impact", Font.BOLD, 40);		
+	    ttf1 = new TrueTypeFont(font1, true);
+		
 		music = new Music("res/Sounds/main.wav");	
 		
 		playBtn = new Image("res/other/start.png");
 		exitBtn = new Image("res/other/exit.png");
 		creditsBtn = new Image("res/other/credits.png");
-		optionsBtn = new Image("res/other/options.png");
-		quitQ = new Image("res/other/quitQ.png");
+		optionsBtn = new Image("res/other/options.png");		
 		yesBtn = new Image("res/other/yes.png");
 		noBtn = new Image("res/other/no.png");		
 		
@@ -41,27 +50,30 @@ public class Menu extends BasicGameState{
 	
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{
 		gc.setTargetFrameRate(60);
-		g.drawString("X: " + posX + "\nY: " + posY + " " + Menu.musicOn, 1000, 50);
-		g.drawString("Welcome to Ryu: The Big Adventure!", 100, 50);		
-		playBtn.draw(100, 100);
-		optionsBtn.draw(100, 200);
-		creditsBtn.draw(100, 300);
-		exitBtn.draw(100, 400);
+		g.setAntiAlias(true);
+		g.setLineWidth(8);
+		g.drawString("X: " + posX + "\nY: " + posY + " " + Menu.musicOn, 1000, 50);		
+		ttf1.drawString(100, 50, "Welcome to Ryu: The Big Adventure!");
+		playBtn.draw(100, 150);
+		optionsBtn.draw(100, 250);
+		creditsBtn.draw(100, 350);
+		exitBtn.draw(100, 450);
 		if (!music.playing()) music.loop();	
 		if (!musicOn) music.stop();
 
-		if(!marioReady) ryuReadyAnimation.draw(555, 100, 400, 400);	
+		if(!marioReady) ryuReadyAnimation.draw(620, 160, 400, 400);	
 		ryuReadyAnimation.stopAt(6);
 		if (ryuReadyAnimation.isStopped()){
 			marioReady = true;
 		}	
 		
-		if(marioReady) ryuStaticAnimation.draw(555, 100, 400, 400);		
+		if(marioReady) ryuStaticAnimation.draw(620, 160, 400, 400);		
 		
-		if (quitQ1) {
-			quitQ.draw(330, 520);
-			yesBtn.draw(430, 600);
-			noBtn.draw(700, 600);
+		if (quitQ1) {			
+			ttf1.drawString(650, 565, "Are you sure?", Color.white);			
+			g.drawRoundRect(498, 560, 550, 150, 20);			
+			yesBtn.draw(532, 640);
+			noBtn.draw(802, 640);
 		}
 	}	
 
@@ -71,31 +83,31 @@ public class Menu extends BasicGameState{
 		posY = Mouse.getY();	
 
 		//play button pressed
-		if((posX > 100 && posX < 311) && (posY > 570 && posY < 619)){
+		if((posX > 100 && posX < 311) && (posY > 519 && posY < 570)){
 			if(Mouse.isButtonDown(0)){
 				music.stop();
 				sbg.enterState(1);				
 			}
 		}
-				
-		//exit button pressed
-		if((posX > 100 && posX < 311) && (posY > 269 && posY < 318)){
-			if(Mouse.isButtonDown(0)){
-				quitQ1 = true;				
+		
+		//options button pressed
+		if((posX > 100 && posX < 311) && (posY > 419 && posY < 469)){
+			if(Mouse.isButtonDown(0)){				
+				sbg.enterState(2);
 			}
 		}
-		
+			
 		//credits button pressed
-		if((posX > 100 && posX < 311) && (posY > 370 && posY < 420)){
+		if((posX > 100 && posX < 311) && (posY > 319 && posY < 369)){
 			if(Mouse.isButtonDown(0)){
 				sbg.enterState(3);
 			}
 		}
 		
-		//options button pressed
-		if((posX > 100 && posX < 311) && (posY > 470 && posY < 520)){
+		//exit button pressed
+		if((posX > 100 && posX < 311) && (posY > 219 && posY < 269)){
 			if(Mouse.isButtonDown(0)){
-				sbg.enterState(2);
+				quitQ1 = true;				
 			}
 		}
 		
@@ -103,20 +115,19 @@ public class Menu extends BasicGameState{
 		if (quitQ1){
 			
 			//if no is pressed
-			if((posX > 700 && posX < 908) && (posY > 70 && posY < 120)){
+			if((posX > 802 && posX < 1012) && (posY > 29 && posY < 80)){
 				if(Mouse.isButtonDown(0)){
 					quitQ1 = false;
 				}
 			}
 			
 			//if yes is pressed
-			if((posX > 430 && posX < 639) && (posY > 70 && posY < 120)){
+			if((posX > 532 && posX < 741) && (posY > 29 && posY < 80)){
 				if(Mouse.isButtonDown(0)){
 					System.exit(0);					
 				}
 			}
-		}
-		
+		}		
 	}	
 	
 	public int getID(){
