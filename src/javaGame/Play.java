@@ -40,8 +40,7 @@ public class Play extends BasicGameState{
 	
 	Image worldMap, round1Image, youWinImage, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
 	
-	int[] duration = {200, 200};
-	String s;
+	int[] duration = {200, 200};	
 	
 	//ryu pos, mp and hp
 	float ryuPositionX = 0;
@@ -1413,82 +1412,82 @@ public class Play extends BasicGameState{
 		}
 		
 		//hadouken
-			if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput){
-				getInitialTime = hadoukenBallStart = time;
-				hadoukenSnd.play();
-				ryuHadouken = true;				
-				hadoukenBallX = shiftX + 100;
-				ryuMP = ryuMP - 2;
-			}			
-			
-			if(delay(getInitialTime, 2000)){
-				ryuHadoukenAnimation.restart();
-				ryuHadouken = ryuHadoukenBall = false;
-			}			
-			
-			if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
-			
-			if(ryuHadoukenBall)	hadoukenBallX += 0.5 * delta;			
+		if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput){
+			getInitialTime = hadoukenBallStart = time;
+			hadoukenSnd.play();
+			ryuHadouken = true;				
+			hadoukenBallX = shiftX + 100;
+			ryuMP = ryuMP - 2;
+		}			
+		
+		if(delay(getInitialTime, 2000)){
+			ryuHadoukenAnimation.restart();
+			ryuHadouken = ryuHadoukenBall = false;
+		}			
+		
+		if(ryuHadouken == true && hadoukenBallStart + 950 <= time) ryuHadoukenBall = true;
+		
+		if(ryuHadoukenBall)	hadoukenBallX += 0.5 * delta;			
 			
 		//shoryuken			
-			if(input.isKeyPressed(Input.KEY_F) && ryuPositionY < -95 && ryuMP > 2 && enableInput){
-				getInitialTime = time;
-				shoryukenSnd.play();
-				ryuShoryuken = true;
-				ryuMP = ryuMP - 2;
-			}
-			
-			if(delay(getInitialTime, 600)){
-				ryuShoryukenAnimation.restart();
-				ryuShoryuken = false;				
-			}
+		if(input.isKeyPressed(Input.KEY_F) && ryuPositionY < -95 && ryuMP > 2 && enableInput){
+			getInitialTime = time;
+			shoryukenSnd.play();
+			ryuShoryuken = true;
+			ryuMP = ryuMP - 2;
+		}
+		
+		if(delay(getInitialTime, 600)){
+			ryuShoryukenAnimation.restart();
+			ryuShoryuken = false;				
+		}
 			
 		//tatsaku
-			if(input.isKeyPressed(Input.KEY_G) && ryuMP > 3 && enableInput){
-				getInitialTime = time;
-				tatsakuSnd.play(0.98f, 1);
-				ryuTatsaku = true;
-				ryuMP = ryuMP - 3;
-			}
+		if(input.isKeyPressed(Input.KEY_G) && ryuMP > 3 && enableInput){
+			getInitialTime = time;
+			tatsakuSnd.play(0.98f, 1);
+			ryuTatsaku = true;
+			ryuMP = ryuMP - 3;
+		}
+		
+		if(delay(getInitialTime, 1500)){
+			ryuTatsakuAnimation.restart();
+			ryuTatsaku = false;
+		}
+		
+		if (ryuTatsaku == true) {
+			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuShoryuken = ryuHurt = false;
+			ryuPositionX -= delta * .1f + 3;
+		}
 			
-			if(delay(getInitialTime, 1500)){
-				ryuTatsakuAnimation.restart();
-				ryuTatsaku = false;
-			}
-			
-			if (ryuTatsaku == true) {
-				ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuShoryuken = ryuHurt = false;
-				ryuPositionX -= delta * .1f + 3;
-			}
-				
-			//ryu MP regen
-			if (ryuMP < 8 && !quit) ryuMP += 0.004;	
-			
-			//ryu dead
-			if (ryuHP <= 0 && ryuHP > -5) ryuDead = 1;
-			
-			if (timer / 100 == 0) ryuDead = 1;
-			
-			if(ryuDead == 1){
-				deadSnd.play();
-				ryuHP = -6;
-				ryuDead = 0;
-				sbg.enterState(0);
-			}
-			
-			//ryu hurt by fire
-			if (ryuPositionX < -1843 && ryuPositionX > -1938 && ryuPositionY < -60 && ryuPositionY > - 161)	{
-				ryuHurt = true;
-				ryuHP = ryuHP - 0.04f;
-				getInitialTime = time;
-			}
-			
-			//ryu gets chicken
-			if (ryuPositionX < -2342 && ryuPositionY < -230 && ryuPositionY > -250 && chickenHP)	{
-				ryuHP = 8;				
-				if (!chickenSnd.playing()) chickenSnd.play();
-				chickenHP = false;
-			}
+		//ryu MP regen
+		if (ryuMP < 8 && !quit) ryuMP += 0.004;	
+		
+		//ryu dead
+		if (ryuHP <= 0 && ryuHP > -5) ryuDead = 1;
+		
+		if (timer / 100 == 0) ryuDead = 1;
+		
+		if(ryuDead == 1){
+			deadSnd.play();
+			ryuHP = -6;
+			ryuDead = 0;
+			sbg.enterState(0);
+		}
+		
+		//ryu hurt by fire
+		if (ryuPositionX < -1843 && ryuPositionX > -1938 && ryuPositionY < -60 && ryuPositionY > - 161)	{
+			ryuHurt = true;
+			ryuHP = ryuHP - 0.04f;
+			getInitialTime = time;
+		}
+		
+		//ryu gets chicken
+		if (ryuPositionX < -2342 && ryuPositionY < -230 && ryuPositionY > -250 && chickenHP)	{
+			ryuHP = 8;				
+			if (!chickenSnd.playing()) chickenSnd.play();
+			chickenHP = false;
+		}
 	}
 	
 	public boolean enemyAttackChance(){		
@@ -1544,9 +1543,7 @@ public class Play extends BasicGameState{
 		if (ryuLowKick) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuHadouken = ryuShoryuken = ryuTatsaku = ryuHurt = false;
 		if (ryuHadouken) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHurt = false;
 		if (ryuHurt) ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuShoryuken = ryuTatsaku = ryuHadouken = false;
-		
-
-		
+				
 		if (ryuShoryuken == true) {
 			ryuLeft = ryuRight = ryuStatic = ryuPunch = ryuLowKick = ryuHadouken = ryuTatsaku = ryuHurt = false;			
 			ryuPositionY++;

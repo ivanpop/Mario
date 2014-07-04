@@ -7,8 +7,7 @@ import org.newdawn.slick.state.*;
 public class Credits extends BasicGameState{	
 
 	Image creditsImg;
-	Image backImg;
-	int posX, posY;
+	Image backImg;	
 	int creditsPos = 550;	
 	
 	public Credits(int state){
@@ -20,14 +19,14 @@ public class Credits extends BasicGameState{
 		backImg = new Image("res/other/back.png");
 	}
 	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{			
-		g.drawImage(backImg, 100, 100);
-		g.drawImage(creditsImg, 500, creditsPos);		
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{		
+		backImg.draw(100, 100);
+		creditsImg.draw(500, creditsPos);		
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException{		
-		posX = Mouse.getX();
-		posY = Mouse.getY();
+		Menu.posX = Mouse.getX();
+		Menu.posY = Mouse.getY();
 		
 		//credits moving
 		creditsPos--;
@@ -41,13 +40,9 @@ public class Credits extends BasicGameState{
 		if(creditsPos == -1100) creditsPos = 700;
 		
 		//back button pressed
-		if((posX > 100 && posX < 311) && (posY > 570 && posY < 619)){
-			if(Mouse.isButtonDown(0)){	
-				creditsPos = 550;				
-				sbg.enterState(0);				
-				posY = 570;
-				Mouse.setCursorPosition(posX, posY);
-			}
+		if(Menu.checkMousePress(100, 311, 570, 619)){			
+			creditsPos = 550;				
+			sbg.enterState(0);				
 		}
 	}
 	
