@@ -6,8 +6,7 @@ import org.newdawn.slick.state.*;
 
 public class Options extends BasicGameState{	
 
-	Image backImg, checkMark, powerBar;
-			
+	Image backImg, checkMark, powerBar;			
 	
 	public Options(int state){
 		
