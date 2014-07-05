@@ -13,8 +13,11 @@ public class Menu extends BasicGameState{
 	static int posX, posY;
 	
 	boolean quitQ1 = false;
-	boolean marioReady = false;
+	boolean ryuReady = false;
 	static boolean musicOn = true;
+	static boolean soundOn = true;
+	
+	static float soundVolume = 1;
 	
 	static Music music;
 	
@@ -30,7 +33,7 @@ public class Menu extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{		
 		font1 = new Font("Impact", Font.BOLD, 40);		
-	    ttf1 = new TrueTypeFont(font1, true);
+		ttf1 = new TrueTypeFont(font1, true);
 		
 		music = new Music("res/Sounds/main.wav");	
 		
@@ -51,7 +54,7 @@ public class Menu extends BasicGameState{
 		gc.setTargetFrameRate(60);
 		g.setAntiAlias(true);
 		g.setLineWidth(8);
-		g.drawString("X: " + posX + "\nY: " + posY + " " + Menu.musicOn, 1000, 50);		
+		g.drawString("X: " + posX + "\nY: " + posY, 1000, 50);		
 		ttf1.drawString(100, 50, "Welcome to Ryu: The Big Adventure!");
 		playBtn.draw(100, 150);
 		optionsBtn.draw(100, 250);
@@ -61,11 +64,11 @@ public class Menu extends BasicGameState{
 		if (!music.playing()) music.loop();
 		if (!musicOn) music.stop();
 
-		if(!marioReady) ryuReadyAnimation.draw(620, 160, 400, 400);	
+		if(!ryuReady) ryuReadyAnimation.draw(620, 160, 400, 400);	
 		ryuReadyAnimation.stopAt(6);
-		if (ryuReadyAnimation.isStopped()) marioReady = true;	
+		if (ryuReadyAnimation.isStopped()) ryuReady = true;	
 		
-		if(marioReady) ryuStaticAnimation.draw(620, 160, 400, 400);		
+		if(ryuReady) ryuStaticAnimation.draw(620, 160, 400, 400);		
 		
 		if (quitQ1) {			
 			ttf1.drawString(650, 565, "Are you sure?", Color.white);			

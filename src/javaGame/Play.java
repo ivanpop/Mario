@@ -191,10 +191,10 @@ public class Play extends BasicGameState{
 		
 		font = new Font("Impact", Font.BOLD, 70);
 		font1 = new Font("Verdana", Font.BOLD, 46);
-	    ttf = new TrueTypeFont(font, true);
-	    ttf1 = new TrueTypeFont(font1, true);
-	    font2 = new Font("Impact", Font.BOLD, 35);
-	    ttf2 = new TrueTypeFont(font2, true);
+		ttf = new TrueTypeFont(font, true);
+		ttf1 = new TrueTypeFont(font1, true);
+		font2 = new Font("Impact", Font.BOLD, 35);
+		ttf2 = new TrueTypeFont(font2, true);
 		
 		//sounds
 		round1Snd = new Sound("res/Sounds/round1.wav");
