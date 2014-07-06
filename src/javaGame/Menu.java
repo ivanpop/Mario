@@ -14,8 +14,7 @@ public class Menu extends BasicGameState{
 	
 	boolean quitQ1 = false;
 	boolean ryuReady = false;
-	static boolean musicOn = true;
-	static boolean soundOn = true;
+	static boolean musicOn = true;	
 	
 	static float soundVolume = 1;
 	

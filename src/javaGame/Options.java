@@ -20,10 +20,10 @@ public class Options extends BasicGameState{
 	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{		
 		backImg.draw(100, 100);		
 		g.drawString("X: " + Menu.posX + "\nY: " + Menu.posY + "\nMusic:" + Menu.musicOn + "\nMusic volume: " + 
-				Menu.music.getVolume() + "\nSounds: " + Menu.soundOn + "\nSound volume: " + Menu.soundVolume, 1000, 50);	
+				Menu.music.getVolume() + "\nSound volume: " + Menu.soundVolume, 1000, 50);	
 		
 		if (Menu.musicOn) checkMark.draw(703, 103, (float) 2.2);
-		if (Menu.soundOn) checkMark.draw(703, 303, (float) 2.2);
+		if (Menu.soundVolume > 0) checkMark.draw(703, 303, (float) 2.2);
 		Menu.ttf1.drawString(400, 100, "Enable music:");
 		Menu.ttf1.drawString(400, 200, "Music volume:");
 		Menu.ttf1.drawString(400, 300, "Enable sounds:");
@@ -93,12 +93,9 @@ public class Options extends BasicGameState{
 	
 	public void soundSwitch(){
 		if(Menu.checkMousePress(704, 735, 385, 415)){
-			if(Menu.soundOn) {				
-				Menu.soundOn = false;
-			}
-			else {				
-				Menu.soundOn = true;
-			}
+			if(Menu.soundVolume > 0) Menu.soundVolume = 0;
+			else Menu.soundVolume = 1;
+			
 			try {
 				Thread.sleep(200);
 			} catch (InterruptedException e) {			
