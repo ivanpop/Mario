@@ -2,11 +2,19 @@ package javaGame;
 
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.*;
+import org.newdawn.slick.geom.Polygon;
 import org.newdawn.slick.state.*;
 
 public class Options extends BasicGameState{	
 
-	Image backImg, checkMark, powerBar;			
+	Image backImg, checkMark, powerBar;
+	
+	String difficultyStr[] = {"Easy","Normal","Hard"};	
+	
+	float[] leftTrigPts = new float[]{700,525,720,545,720,505};
+	float[] rightTrigPts = new float[]{930,525,910,545,910,505};
+	private Polygon leftTrig = new Polygon(leftTrigPts);
+	private Polygon rightTrig = new Polygon(rightTrigPts);	
 	
 	public Options(int state){
 		
@@ -14,24 +22,28 @@ public class Options extends BasicGameState{
 	
 	public void init(GameContainer gc, StateBasedGame sbg) throws SlickException{
 		backImg = new Image("res/other/back.png");
-		checkMark = new Image("res/other/checkmark1.png");		
+		checkMark = new Image("res/other/checkmark1.png");
 	}
 	
-	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{		
-		backImg.draw(100, 100);		
+	public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException{		backImg.draw(100, 100);
 		g.drawString("X: " + Menu.posX + "\nY: " + Menu.posY + "\nMusic:" + Menu.musicOn + "\nMusic volume: " + 
 				Menu.music.getVolume() + "\nSound volume: " + Menu.soundVolume, 1000, 50);	
 		
 		if (Menu.musicOn) checkMark.draw(703, 103, (float) 2.2);
-		if (Menu.soundVolume > 0) checkMark.draw(703, 303, (float) 2.2);
+		if (Menu.soundOn) checkMark.draw(703, 303, (float) 2.2);
 		Menu.ttf1.drawString(400, 100, "Enable music:");
 		Menu.ttf1.drawString(400, 200, "Music volume:");
 		Menu.ttf1.drawString(400, 300, "Enable sounds:");
 		Menu.ttf1.drawString(400, 400, "Sounds volume:");
+		Menu.ttf1.drawString(400, 500, "Difficulty:");
+		Menu.ttf1.drawString(750, 500, difficultyStr[Menu.difficultyInt]);
+		g.fill(leftTrig);
+		g.fill(rightTrig);
 		g.drawRect(700, 100, 40, 40);
 		g.drawRect(700, 300, 40, 40);
 		g.drawRect(700, 200, 410, 40);
 		g.drawRect(700, 400, 410, 40);
+		
 		
 		if (Menu.music.getVolume() >= 0.1) g.fillRoundRect(710, 208, 30, 24, 5);
 		if (Menu.music.getVolume() >= 0.2) g.fillRoundRect(750, 208, 30, 24, 5);
@@ -64,6 +76,7 @@ public class Options extends BasicGameState{
 		musicVolumeBar();
 		soundSwitch();
 		soundVolumeBar();
+		difficultySwitch();
 		
 		//back button pressed				
 		if(Menu.checkMousePress(100, 311, 570, 619)) sbg.enterState(0);
@@ -73,8 +86,28 @@ public class Options extends BasicGameState{
 		return 2;
 	}
 	
+	public void difficultySwitch(){
+		if(Menu.checkMousePress(700, 719, 174, 214) && Menu.difficultyInt > 0){
+			Menu.difficultyInt--;
+			threadSleep();
+		}
+		
+		if(Menu.checkMousePress(909, 928, 174, 214) && Menu.difficultyInt < 2){
+			Menu.difficultyInt++;
+			threadSleep();
+		}
+	}
+	
+	public void threadSleep(){
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {			
+			e.printStackTrace();
+		}
+	}
+	
 	public void musicSwitch(){
-		if(Menu.checkMousePress(704, 735, 585, 615)){
+		if(Menu.checkMousePress(704, 734, 585, 615)){
 			if(Menu.musicOn) {
 				Menu.music.stop();
 				Menu.musicOn = false;
@@ -83,24 +116,17 @@ public class Options extends BasicGameState{
 				Menu.music.loop(1, Menu.music.getVolume());
 				Menu.musicOn = true;
 			}
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {			
-				e.printStackTrace();
-			}			
+			
+			threadSleep();
 		}
 	}
 	
 	public void soundSwitch(){
 		if(Menu.checkMousePress(704, 735, 385, 415)){
-			if(Menu.soundVolume > 0) Menu.soundVolume = 0;
-			else Menu.soundVolume = 1;
+			if(Menu.soundOn) Menu.soundOn = false;
+			else Menu.soundOn = true;
 			
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {			
-				e.printStackTrace();
-			}			
+			threadSleep();
 		}
 	}
 	

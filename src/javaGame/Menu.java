@@ -10,11 +10,11 @@ public class Menu extends BasicGameState{
 	
 	Image playBtn, exitBtn, creditsBtn, optionsBtn, quitQ, yesBtn, noBtn;	
 
-	static int posX, posY;
+	static int posX, posY, difficultyInt = 1;
 	
 	boolean quitQ1 = false;
 	boolean ryuReady = false;
-	static boolean musicOn = true;	
+	static boolean musicOn = true, soundOn = true;	
 	
 	static float soundVolume = 1;
 	
