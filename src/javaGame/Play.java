@@ -12,7 +12,8 @@ public class Play extends BasicGameState{
 	boolean quit = false;
 	boolean round1Bool = true;	
 	boolean enableInput = false;
-	boolean chickenHP = true;
+	boolean chickenHP1 = true;
+	boolean chickenHP2 = true;
 	boolean winState = false;	
 	
 	//ryu bools
@@ -495,7 +496,8 @@ public class Play extends BasicGameState{
 		if(showThug10) thug10Sprite.draw(thug10PosX, thug10PosY);
 		
 		//chicken
-		if (chickenHP) chicken.draw(ryuPositionX + 2500, ryuPositionY + 400, 2);			
+		if (chickenHP1) chicken.draw(ryuPositionX + 2500, ryuPositionY + 400, 2);
+		if (chickenHP2) chicken.draw(ryuPositionX + 6500, ryuPositionY + 400, 2);
 		
 		if(quit == true){
 			ttf1.drawString(450, 150, "Game Paused", Color.white);
@@ -1468,11 +1470,18 @@ public class Play extends BasicGameState{
 			getInitialTime = time;
 		}
 		
-		//ryu gets chicken
-		if (ryuPositionX < -2342 && ryuPositionY < -230 && ryuPositionY > -250 && chickenHP)	{
+		//ryu gets chicken1
+		if (ryuPositionX < -2342 && ryuPositionY < -230 && ryuPositionY > -250 && chickenHP1)	{
 			ryuHP = 8;				
 			if (!chickenSnd.playing() && Menu.soundOn) chickenSnd.play(1, Menu.soundVolume);
-			chickenHP = false;
+			chickenHP1 = false;
+		}
+		
+		//ryu gets chicken2
+		if (ryuPositionX < -6342 && ryuPositionY < -230 && ryuPositionY > -250 && chickenHP2)	{
+			ryuHP = 8;				
+			if (!chickenSnd.playing() && Menu.soundOn) chickenSnd.play(1, Menu.soundVolume);
+			chickenHP2 = false;
 		}
 	}
 	
