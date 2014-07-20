@@ -11,7 +11,7 @@ public class Play extends BasicGameState{
 	//bools
 	boolean quit = false;
 	boolean round1Bool = true;	
-	boolean enableInput = false;
+	boolean enableInput = false;	
 	boolean chickenHP1 = true;
 	boolean chickenHP2 = true;
 	boolean winState = false;	
@@ -659,7 +659,7 @@ public class Play extends BasicGameState{
 				thug1Sprite = thug1HurtAnimation;
 				getInitialTime2 = time;
 				thug1HP -= 11;
-			}
+			}			
 		}
 		
 		//enemy2 interaction------------------------------------------
@@ -1400,7 +1400,7 @@ public class Play extends BasicGameState{
 		}
 		
 		//hadouken
-		if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput){
+		if(input.isKeyPressed(Input.KEY_D) && ryuMP > 2 && enableInput && enableHadouken()){
 			getInitialTime = hadoukenBallStart = time;
 			if(Menu.soundOn) hadoukenSnd.play(1, Menu.soundVolume);
 			ryuHadouken = true;				
@@ -1497,9 +1497,17 @@ public class Play extends BasicGameState{
 		else return false;
 	}
 	
-	public boolean thugAtRyu(float x, float y){
-		if(x < 190 && x > 115 && y < 130 && y > 70)	return true;
+	public boolean thugAtRyu(float thugPosX, float thugPosY){		
+		if(thugPosX < 190 && thugPosX > 115 && thugPosY < 130 && thugPosY > 70)	return true;
 		else return false;
+	}
+	
+	public boolean enableHadouken(){
+		if ((thug1PosX < 300 && thug1PosX > 100) || (thug2PosX < 300 && thug2PosX > 100) || (thug3PosX < 300 && thug3PosX > 100) || 
+				(thug4PosX < 300 && thug4PosX > 100) || (thug5PosX < 300 && thug5PosX > 100) || (thug6PosX < 300 && thug6PosX > 100) || 
+				(thug7PosX < 300 && thug7PosX > 100) || (thug8PosX < 300 && thug8PosX > 100) || (thug9PosX < 300 && thug9PosX > 100) || 
+				(thug10PosX < 300 && thug10PosX > 100)) return false;
+		else return true;
 	}
 	
 	public boolean ryuAttack() {
@@ -1513,7 +1521,7 @@ public class Play extends BasicGameState{
 		if(startTime + number <= time) return true;			
 		else return false;
 	}
-	
+		
 	public boolean movement(){
 		if(ryuPunch == false) {
 			if(ryuLowKick == false){
