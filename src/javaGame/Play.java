@@ -14,7 +14,8 @@ public class Play extends BasicGameState
 	boolean enableInput = false;	
 	boolean chickenHP1 = true;
 	boolean chickenHP2 = true;
-	boolean winState = false;	
+	boolean winState = false;
+	boolean timeBonus = true;
 	
 	//ryu bools
 	boolean ryuStatic = true;
@@ -35,9 +36,9 @@ public class Play extends BasicGameState
 	
 	//ryu sounds
 	private Sound round1Snd, youWinSnd, youLoseSnd, punchAndKickSnd, hadoukenSnd, shoryukenSnd, tatsakuSnd, hurtSnd, deadSnd, punchedSnd,
-				goSnd, chickenSnd;
+				goSnd, chickenSnd, timeBonusSnd;
 	
-	int round1Scale = 50, youWinScale1 = 50, youWinScale2 = 50, ryuDead, staticDuration = 0, timer = 9999;
+	int round1Scale = 50, youWinScale1 = 50, youWinScale2 = 50, ryuDead, staticDuration = 0, timer = 6099;
 	
 	Image worldMap, round1Image, youWinImage, healthBar, healthBox, mpBox, goImg, timerBcg, chicken, menuBcg, statsBcg;
 	
@@ -211,7 +212,8 @@ public class Play extends BasicGameState
 		goSnd = new Sound("res/Sounds/go.wav");
 		chickenSnd = new Sound("res/Sounds/chicken.wav");
 		youWinSnd = new Sound("res/Sounds/youWin.wav");
-		youLoseSnd = new Sound("res/Sounds/youLose.wav");		
+		youLoseSnd = new Sound("res/Sounds/youLose.wav");
+		timeBonusSnd = new Sound("res/Sounds/timeBonus.wav");
 		
 		//ryu Animations
 		ryuStaticSheet = new SpriteSheet("res/ryuAnimations/ryuStatic.png", 77, 98);		
@@ -502,6 +504,9 @@ public class Play extends BasicGameState
 		}
 		
 		if (goSnd.playing()) goImg.draw(1000, 100);
+		
+		//timeBonus
+		if (!timeBonus && timer > 5500) ttf2.drawString(730, 620, "Time bonus!");
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException
@@ -524,6 +529,13 @@ public class Play extends BasicGameState
 		
 		//show go sign
 		if (!round1Bool && !quit && !winState)showGoSign(input);
+		
+		//timeBonus
+		if(ryuPositionX > -6000 && ryuPositionX < -5900 && timeBonus) {
+			timer = 6099;
+			timeBonus = false;
+			timeBonusSnd.play();			
+		}
 	}	
 	
 	public void menu(Input input, StateBasedGame sbg)
