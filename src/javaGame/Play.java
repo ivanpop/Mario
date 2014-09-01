@@ -55,7 +55,7 @@ public class Play extends BasicGameState
 	
 	//thug vars
 	//thug1	
-	int thug1HP = 144;
+	int thug1HP = 144 * Menu.difficultyInt;
 	float thug1PosX, thug1PosY;
 	int moveY1 = 144;
 	int moveX1 = 1600;
@@ -416,7 +416,7 @@ public class Play extends BasicGameState
 		
 		//round1 animation and statistics
 		if (round1Bool) round1Image.draw(500, 100, round1Scale, round1Scale);		
-		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug2PosY" + thug2PosY + "\nThug1HP" + thug1HP +"\nHadoukenB" + hadoukenBallX + "\nMove" + moveY1, 1100, 60);
+		g.drawString("Time:" + time + "\nMP" + ryuMP + "\nHP" + ryuHP + "\nThug1PosX" + thug1PosX + "\nThug1PosY" + thug1PosY + "\nThug2PosY" + thug2PosY + "\nThug1HP" + thug1HP +"\nHadoukenB" + hadoukenBallX + "\nMove" + moveY1 + "\nDifficulty: " + Menu.difficultyInt, 1100, 60);
 		g.drawString("Ryu X: " + ryuPositionX + "\nRyu Y: " + ryuPositionY, 1100, 20);				
 		
 		//youWin animation
@@ -570,6 +570,31 @@ public class Play extends BasicGameState
 			round1Bool = false;
 			enableInput = true;
 			round1Scale = 1;
+			
+			if (Menu.difficultyInt == 2){
+				thug1HP = 288;
+				thug2HP = 288;
+				thug3HP = 288;
+				thug4HP = 288;
+				thug5HP = 288;
+				thug6HP = 288;
+				thug7HP = 288;
+				thug8HP = 288;
+				thug9HP = 288;
+				thug10HP = 365;				
+			}
+			if (Menu.difficultyInt == 0){
+				thug1HP = 77;				
+				thug2HP = 77;
+				thug3HP = 77;
+				thug4HP = 77;
+				thug5HP = 77;
+				thug6HP = 77;
+				thug7HP = 77;
+				thug8HP = 77;
+				thug9HP = 77;
+				thug10HP = 144;	
+			}
 		}
 	}
 	
