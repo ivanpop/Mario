@@ -525,7 +525,7 @@ public class Play extends BasicGameState
 		if (!quit && enableInput) timer -= delta * 0.061;		
 		
 		//end game
-		if (thug1HP < 0 && thug2HP < 0 && thug3HP < 0 && thug4HP < 0 && thug5HP < 0 && thug6HP < 0 && thug7HP < 0 && thug8HP < 0 && thug9HP < 0 && thug10HP < 0 ) winState = true;		
+		if (thug1HP < 0 && thug2HP < 0 && thug3HP < 0 && thug4HP < 0 && thug5HP < 0 && thug6HP < 0 && thug7HP < 0 && thug8HP < 0 && thug9HP < 0 && thug10HP <= 0 ) winState = true;		
 		
 		//show go sign
 		if (!round1Bool && !quit && !winState)showGoSign(input);
@@ -613,16 +613,27 @@ public class Play extends BasicGameState
 				ryuSprite = ryuWin1Animation;
 				ryuSprite.stopAt(3);
 				
-				if (ryuSprite.isStopped()) ryuSprite = ryuWin2Animation;
+				if (ryuSprite.isStopped()) 
+				{
+					ryuSprite = ryuWin2Animation;
+				}
 			}			
 		}
 		
-		if (youWinScale1 >= 100 && youWinScale1 <= 105 && Menu.soundOn) youWinSnd.play(1, Menu.soundVolume);
+		if (youWinScale1 >= 100 && youWinScale1 <= 105 && Menu.soundOn)
+		{
+			youWinSnd.play(1, Menu.soundVolume);
+		}
 		
-		if (youWinScale1 >= 600 && youWinScale1 <= 610) youWinScale1 -= 3;	
+		if (youWinScale1 >= 600 && youWinScale1 <= 610)
+		{
+			youWinScale1 -= 3;	
+		}
 		
-		if (youWinScale2 >= 1200 && youWinScale1 <= 1210) sbg.enterState(0);	
-		
+		if (youWinScale2 >= 1200 && youWinScale1 <= 1210)
+		{
+			sbg.enterState(0);	
+		}		
 	}
 	
 	public void drawThugs(int delta)
@@ -1652,8 +1663,14 @@ public class Play extends BasicGameState
 	{		
 		Random rand = new Random();			
 		
-		if (rand.nextInt(1000) > 900) return true;				
-		else return false;		
+		if (rand.nextInt(1000) > 900)
+		{
+			return true;				
+		}
+		else
+		{
+			return false;		
+		}
 	}
 	
 	public boolean hadoukenAtThug(float x, float y)
@@ -1664,8 +1681,15 @@ public class Play extends BasicGameState
 	
 	public boolean thugAtRyu(float thugPosX, float thugPosY)
 	{		
-		if (thugPosX < 190 && thugPosX > 115 && thugPosY < 130 && thugPosY > 70) return true;
-		else return false;
+		if (thugPosX < 190 && thugPosX > 115 && 
+				thugPosY < 130 && thugPosY > 70)
+		{
+			return true;		
+		}
+		else 
+		{
+			return false;
+		}
 	}
 	
 	public boolean enableHadouken()
@@ -1679,8 +1703,15 @@ public class Play extends BasicGameState
 	
 	public boolean ryuAttack() 
 	{
-		if (ryuHadouken || ryuLowKick || ryuPunch || ryuShoryuken || ryuTatsaku) return true;
-		else return false;
+		if (ryuHadouken || ryuLowKick || ryuPunch 
+				|| ryuShoryuken || ryuTatsaku)
+		{
+			return true;
+		}
+		else
+		{
+		return false;
+		}
 	}
 
 	public boolean delay(long startTime, int number)
